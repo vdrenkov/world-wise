@@ -55,7 +55,3 @@ This project was created as part of following the Udemy course _“The Ultimate 
 The implementation here is my own and is intended solely for educational and portfolio purposes.  
 It is not licensed for reuse, modification, or distribution.  
 This project is not affiliated with or endorsed by Jonas Schmedtmann.
-
----
-
-**Repository:** [vdrenkov/world-wise](https://github.com/vdrenkov/world-wise)
