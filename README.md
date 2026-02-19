@@ -1,57 +1,52 @@
 # World Wise
 
-**World Wise** is a React application that serves as an interactive map to track your footsteps all over the world.
+Interactive travel-tracking app built with React, React Router, and Leaflet.  
+Mark visited cities on a map, browse cities/countries lists, and manage entries through a local JSON API.
 
 ## Features
 
-- Visualize places you have visited on a world map.
-- Mark and track your travels easily.
-- User-friendly interface for managing your global adventures.
+- Interactive world map with click-to-add city workflow.
+- City and country views with route-based navigation.
+- Mock authentication flow for protected app routes.
+- Local API via `json-server` for city CRUD operations.
+- SEO/social metadata (canonical, Open Graph, Twitter cards, WebSite JSON-LD).
+- Indexing assets: `robots.txt`, `sitemap.xml`, and SPA redirects (`_redirects`).
+- PWA metadata via `manifest.webmanifest`.
 
 ## Tech Stack
 
-- **Frontend:** React
-- **Language:** JavaScript
+- React 19
+- React Router 7 (`react-router`)
+- Vite 7
+- React Leaflet 5
+- JSON Server 1.0.0-beta
+- ESLint 9 (flat config)
 
 ## Getting Started
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/vdrenkov/world-wise.git
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the backend server:
-   ```bash
-   npm run server
-   ```
-4. For development, run:
+```bash
+npm install
+npm run server
+npm run dev
+```
 
-   ```bash
-   npm run dev
-   ```
+The app runs on `http://localhost:5173` by default.  
+The local API runs on `http://localhost:8800`.
 
-   This will start the development environment with hot reloading.
+## Scripts
 
-   **OR**
+- `npm run dev` - start Vite dev server.
+- `npm run build` - create production build in `dist/`.
+- `npm run preview` - preview the production build locally.
+- `npm run lint` - run ESLint checks.
+- `npm run server` - start local JSON Server API.
 
-   To create a production build, run:
+## Deployment Notes
 
-   ```bash
-   npm run build
-   ```
-
-   Then deploy the contents of the build directory to your preferred hosting provider.
-
-## Project Status
-
-This project's development has been completed.
+- Deploy the built `dist/` output.
+- For Netlify, `public/_redirects` is included so client-side routes resolve to `index.html`.
 
 ## License
 
-This project was created as part of following the Udemy course _“The Ultimate React Course”_ by Jonas Schmedtmann.  
-The implementation here is my own and is intended solely for educational and portfolio purposes.  
-It is not licensed for reuse, modification, or distribution.  
-This project is not affiliated with or endorsed by Jonas Schmedtmann.
+This project was created while following _The Ultimate React Course_ by Jonas Schmedtmann.  
+The implementation in this repository is for educational and portfolio purposes only.
