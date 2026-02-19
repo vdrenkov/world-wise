@@ -7,8 +7,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { useUrlPosition } from "../hooks/useUrlPosition";
 import { useCities } from "../contexts/CitiesContext";
@@ -17,9 +16,8 @@ import Button from "./Button";
 
 import styles from "./Map.module.css";
 
-function Map() {
+function WorldMap() {
   const { cities } = useCities();
-  const [mapPosition, setMapPosition] = useState([40, 0]);
   const [mapLat, mapLng] = useUrlPosition();
   const {
     isLoading: isLoadingPosition,
@@ -27,20 +25,10 @@ function Map() {
     getPosition,
   } = useGeolocation();
 
-  useEffect(
-    function () {
-      if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
-    },
-    [mapLat, mapLng]
-  );
-
-  useEffect(
-    function () {
-      if (geolocationPosition)
-        setMapPosition([geolocationPosition.lat, geolocationPosition.lng]);
-    },
-    [geolocationPosition]
-  );
+  const defaultPosition = mapLat && mapLng ? [mapLat, mapLng] : [40, 0];
+  const mapPosition = geolocationPosition
+    ? [geolocationPosition.lat, geolocationPosition.lng]
+    : defaultPosition;
 
   return (
     <div className={styles.mapContainer}>
@@ -93,4 +81,4 @@ function DetectClick() {
   });
 }
 
-export default Map;
+export default WorldMap;

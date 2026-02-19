@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useCities } from "../contexts/CitiesContext";
 
 import styles from "./CityItem.module.css";
@@ -40,3 +40,4 @@ function CityItem({ city }) {
 }
 
 export default CityItem;
+

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 import AppNav from "./AppNav";
 import Logo from "./Logo";
@@ -23,3 +23,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+

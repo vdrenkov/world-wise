@@ -1,7 +1,7 @@
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useUrlPosition } from "../hooks/useUrlPosition";
 import { useCities } from "../contexts/CitiesContext";
 
@@ -17,7 +17,7 @@ export function convertToEmoji(countryCode) {
   const codePoints = countryCode
     .toUpperCase()
     .split("")
-    .map((char) => 127397 + char.charCodeAt());
+    .map((char) => 127397 + char.codePointAt());
   return String.fromCodePoint(...codePoints);
 }
 
@@ -45,14 +45,14 @@ function Form() {
           setGeocodingError("");
 
           const res = await fetch(
-            `${BASE_URL}?latitude=${lat}&longitude=${lng}`
+            `${BASE_URL}?latitude=${lat}&longitude=${lng}`,
           );
           const data = await res.json();
           console.log(data);
 
           if (!data.countryCode)
             throw new Error(
-              "That doesn't seem to be a city. Click somewhere else 😉"
+              "That doesn't seem to be a city. Click somewhere else 😉",
             );
 
           setCityName(data.city || data.locality || "");
@@ -66,7 +66,7 @@ function Form() {
       }
       fetchCityData();
     },
-    [lat, lng]
+    [lat, lng],
   );
 
   async function handleSubmit(event) {

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/FakeAuthContext";
 
 import styles from "./User.module.css";
@@ -22,3 +22,4 @@ function User() {
 }
 
 export default User;
+

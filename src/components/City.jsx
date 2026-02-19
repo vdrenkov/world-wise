@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useCities } from "../contexts/CitiesContext";
 
 import BackButton from "./BackButton";
@@ -70,3 +70,4 @@ function City() {
 }
 
 export default City;
+

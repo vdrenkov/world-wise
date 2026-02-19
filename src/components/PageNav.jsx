@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 import Logo from "./Logo";
 
@@ -27,3 +27,4 @@ function PageNav() {
 }
 
 export default PageNav;
+

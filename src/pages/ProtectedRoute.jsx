@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/FakeAuthContext";
 
 function ProtectedRoute({ children }) {
@@ -17,3 +17,4 @@ function ProtectedRoute({ children }) {
 }
 
 export default ProtectedRoute;
+

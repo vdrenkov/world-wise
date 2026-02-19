@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 import styles from "./AppNav.module.css";
 
@@ -18,3 +18,4 @@ function AppNav() {
 }
 
 export default AppNav;
+
