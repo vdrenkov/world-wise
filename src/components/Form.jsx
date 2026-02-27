@@ -1,17 +1,17 @@
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { useUrlPosition } from "../hooks/useUrlPosition";
-import { useCities } from "../contexts/CitiesContext";
-
 import DatePicker from "react-datepicker";
-import Button from "./Button";
+import { useNavigate } from "react-router";
+
+import { useCities } from "../contexts/CitiesContext";
+import { useUrlPosition } from "../hooks/useUrlPosition";
+
 import BackButton from "./BackButton";
+import Button from "./Button";
+import styles from "./Form.module.css";
 import Message from "./Message";
 import Spinner from "./Spinner";
-
-import styles from "./Form.module.css";
 
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -58,8 +58,8 @@ function Form() {
           setCityName(data.city || data.locality || "");
           setCountry(data.countryName);
           setEmoji(convertToEmoji(data.countryCode));
-        } catch (err) {
-          setGeocodingError(err.message);
+        } catch (error) {
+          setGeocodingError(error.message);
         } finally {
           setIsLoadingGeocoding(false);
         }
@@ -103,7 +103,7 @@ function Form() {
         <label htmlFor="cityName">City name</label>
         <input
           id="cityName"
-          onChange={(e) => setCityName(e.target.value)}
+          onChange={(event) => setCityName(event.target.value)}
           value={cityName}
         />
         <span className={styles.flag}>{emoji}</span>
@@ -124,7 +124,7 @@ function Form() {
         <label htmlFor="notes">Notes about your trip to {cityName}</label>
         <textarea
           id="notes"
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(event) => setNotes(event.target.value)}
           value={notes}
         />
       </div>

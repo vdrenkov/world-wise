@@ -1,15 +1,15 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
+import City from "./components/City";
+import CityList from "./components/CityList";
+import CountryList from "./components/CountryList";
+import Form from "./components/Form";
+import SpinnerFullPage from "./components/SpinnerFullPage";
 import { CitiesProvider } from "./contexts/CitiesContext";
 import { AuthProvider } from "./contexts/FakeAuthContext";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
-import CityList from "./components/CityList";
-import CountryList from "./components/CountryList";
-import City from "./components/City";
-import Form from "./components/Form";
-import SpinnerFullPage from "./components/SpinnerFullPage";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Product = lazy(() => import("./pages/Product"));

@@ -6,14 +6,13 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-
 import { useNavigate } from "react-router";
+
+import { useCities } from "../contexts/CitiesContext";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { useUrlPosition } from "../hooks/useUrlPosition";
-import { useCities } from "../contexts/CitiesContext";
 
 import Button from "./Button";
-
 import styles from "./Map.module.css";
 
 function WorldMap() {

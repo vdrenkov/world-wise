@@ -8,8 +8,8 @@ function BackButton() {
   return (
     <Button
       type="back"
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={(event) => {
+        event.preventDefault();
         navigate(-1);
       }}
     >
@@ -19,4 +19,3 @@ function BackButton() {
 }
 
 export default BackButton;
-
