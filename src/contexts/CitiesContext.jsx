@@ -1,9 +1,10 @@
 import {
   createContext,
-  useEffect,
-  useContext,
-  useReducer,
   useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
 } from "react";
 
 const BASE_URL = "http://localhost:8800";
@@ -63,7 +64,7 @@ function reducer(state, action) {
 function CitiesProvider({ children }) {
   const [{ cities, isLoading, currentCity, error }, dispatch] = useReducer(
     reducer,
-    initialState
+    initialState,
   );
 
   useEffect(function () {
@@ -101,10 +102,10 @@ function CitiesProvider({ children }) {
         });
       }
     },
-    [currentCity.id]
+    [currentCity.id],
   );
 
-  async function createCity(newCity) {
+  const createCity = useCallback(async function createCity(newCity) {
     dispatch({ type: "loading" });
 
     try {
@@ -124,9 +125,9 @@ function CitiesProvider({ children }) {
         payload: "There was an error creating the city...",
       });
     }
-  }
+  }, []);
 
-  async function deleteCity(id) {
+  const deleteCity = useCallback(async function deleteCity(id) {
     dispatch({ type: "loading" });
 
     try {
@@ -141,22 +142,23 @@ function CitiesProvider({ children }) {
         payload: "There was an error deleting the city...",
       });
     }
-  }
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      cities,
+      isLoading,
+      currentCity,
+      error,
+      getCity,
+      createCity,
+      deleteCity,
+    }),
+    [cities, isLoading, currentCity, error, getCity, createCity, deleteCity],
+  );
 
   return (
-    <CitiesContext.Provider
-      value={{
-        cities,
-        isLoading,
-        currentCity,
-        error,
-        getCity,
-        createCity,
-        deleteCity,
-      }}
-    >
-      {children}
-    </CitiesContext.Provider>
+    <CitiesContext.Provider value={value}>{children}</CitiesContext.Provider>
   );
 }
 

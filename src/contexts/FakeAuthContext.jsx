@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useCallback, useContext, useMemo, useReducer } from "react";
 
 const AuthContext = createContext();
 
@@ -31,17 +31,22 @@ function AuthProvider({ children }) {
     initialState
   );
 
-  function login(email, password) {
+  const login = useCallback(function login(email, password) {
     if (email === FAKE_USER.email && password === FAKE_USER.password)
       dispatch({ type: "login", payload: FAKE_USER });
-  }
+  }, []);
 
-  function logout() {
+  const logout = useCallback(function logout() {
     dispatch({ type: "logout" });
-  }
+  }, []);
+
+  const value = useMemo(
+    () => ({ user, isAuthenticated, login, logout }),
+    [user, isAuthenticated, login, logout]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

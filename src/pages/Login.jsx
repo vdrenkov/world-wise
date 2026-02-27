@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-
 import Button from "../components/Button";
 import PageNav from "../components/PageNav";
 import { useAuth } from "../contexts/FakeAuthContext";
@@ -9,7 +8,6 @@ import { useAuth } from "../contexts/FakeAuthContext";
 import styles from "./Login.module.css";
 
 export default function Login() {
-  // Pre-filled for development purposes
   const [email, setEmail] = useState("vdrenkov@example.com");
   const [password, setPassword] = useState("qwerty");
   const { login, isAuthenticated } = useAuth();
@@ -25,7 +23,7 @@ export default function Login() {
     function () {
       if (isAuthenticated) navigate("/app", { replace: true });
     },
-    [isAuthenticated, navigate]
+    [isAuthenticated, navigate],
   );
 
   return (
@@ -60,4 +58,3 @@ export default function Login() {
     </main>
   );
 }
-
