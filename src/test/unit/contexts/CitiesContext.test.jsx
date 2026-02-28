@@ -35,6 +35,7 @@ const cityToCreate = {
 
 function createFetchResponse(payload) {
   return {
+    ok: true,
     json: vi.fn().mockResolvedValue(payload),
   };
 }

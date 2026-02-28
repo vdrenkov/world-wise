@@ -8,6 +8,7 @@ import { CitiesProvider } from "../../contexts/CitiesContext";
 
 function createFetchResponse(payload) {
   return {
+    ok: true,
     json: vi.fn().mockResolvedValue(payload),
   };
 }

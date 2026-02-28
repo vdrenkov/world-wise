@@ -7,6 +7,7 @@ import { CitiesProvider } from "../../contexts/CitiesContext";
 
 function createFetchResponse(payload) {
   return {
+    ok: true,
     json: vi.fn().mockResolvedValue(payload),
   };
 }
@@ -75,7 +76,7 @@ describe("cities delete integration", () => {
       expect(screen.getByText("Berlin")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getAllByRole("button")[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sofia" }));
 
     await waitFor(() => {
       expect(screen.queryByText("Sofia")).not.toBeInTheDocument();

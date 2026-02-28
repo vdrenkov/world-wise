@@ -73,6 +73,7 @@ function CitiesProvider({ children }) {
 
       try {
         const res = await fetch(`${BASE_URL}/cities`);
+        if (!res.ok) throw new Error("Failed to load cities");
         const data = await res.json();
         dispatch({ type: "cities/loaded", payload: data });
       } catch {
@@ -93,6 +94,7 @@ function CitiesProvider({ children }) {
 
       try {
         const res = await fetch(`${BASE_URL}/cities/${id}`);
+        if (!res.ok) throw new Error("Failed to load city");
         const data = await res.json();
         dispatch({ type: "city/loaded", payload: data });
       } catch {
@@ -116,6 +118,7 @@ function CitiesProvider({ children }) {
           "Content-Type": "application/json",
         },
       });
+      if (!res.ok) throw new Error("Failed to create city");
       const data = await res.json();
 
       dispatch({ type: "city/created", payload: data });
@@ -131,9 +134,10 @@ function CitiesProvider({ children }) {
     dispatch({ type: "loading" });
 
     try {
-      await fetch(`${BASE_URL}/cities/${id}`, {
+      const res = await fetch(`${BASE_URL}/cities/${id}`, {
         method: "DELETE",
       });
+      if (!res.ok) throw new Error("Failed to delete city");
 
       dispatch({ type: "city/deleted", payload: id });
     } catch {

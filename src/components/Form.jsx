@@ -37,7 +37,7 @@ function Form() {
 
   useEffect(
     function () {
-      if (!lat && !lng) return;
+      if (!lat || !lng) return;
 
       async function fetchCityData() {
         try {
@@ -47,6 +47,7 @@ function Form() {
           const res = await fetch(
             `${BASE_URL}?latitude=${lat}&longitude=${lng}`,
           );
+          if (!res.ok) throw new Error("There was an error loading city data...");
           const data = await res.json();
 
           if (!data.countryCode)
@@ -71,7 +72,7 @@ function Form() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!cityName || !date) return;
+    if (!cityName || !date || !lat || !lng) return;
 
     const newCity = {
       cityName,
@@ -88,7 +89,7 @@ function Form() {
 
   if (isLoadingGeocoding) return <Spinner />;
 
-  if (!lat && !lng)
+  if (!lat || !lng)
     return <Message message="Start by clicking somewhere on the map." />;
 
   if (geocodingError) return <Message message={geocodingError} />;

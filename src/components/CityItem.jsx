@@ -15,14 +15,12 @@ function CityItem({ city }) {
   const { currentCity, deleteCity } = useCities();
   const { cityName, emoji, date, id, position } = city;
 
-  function handleClick(event) {
-    event.preventDefault();
-
+  function handleDelete() {
     deleteCity(id);
   }
 
   return (
-    <li>
+    <li className={styles.cityRow}>
       <Link
         className={`${styles.cityItem} ${
           id === currentCity.id ? styles["cityItem--active"] : ""
@@ -32,10 +30,15 @@ function CityItem({ city }) {
         <span className={styles.emoji}>{emoji}</span>
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>({formatDate(date)})</time>
-        <button className={styles.deleteBtn} onClick={handleClick}>
-          &times;
-        </button>
       </Link>
+      <button
+        type="button"
+        className={styles.deleteBtn}
+        onClick={handleDelete}
+        aria-label={`Delete ${cityName}`}
+      >
+        &times;
+      </button>
     </li>
   );
 }

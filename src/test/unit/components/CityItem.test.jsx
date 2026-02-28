@@ -72,7 +72,7 @@ describe("CityItem", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sofia" }));
 
     expect(deleteCity).toHaveBeenCalledWith(1);
   });
