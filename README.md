@@ -33,6 +33,10 @@ The app runs on `http://localhost:5173` by default.
 
 Visited cities are stored locally in your browser (`localStorage` key: `worldwise.cities`).
 
+## Live Demo
+
+- https://world-wise-vdrenkov.netlify.app/
+
 ## Demo Login
 
 - Email: `vdrenkov@example.com`
@@ -67,6 +71,7 @@ npm run build
 
 - Deploy the built `dist/` output.
 - For Netlify, `public/_redirects` is included so client-side routes resolve to `index.html`.
+- `public/robots.txt` and `public/sitemap.xml` are configured for the live domain.
 
 ## License
 

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /app
 
 Sitemap: https://world-wise-vdrenkov.netlify.app/sitemap.xml

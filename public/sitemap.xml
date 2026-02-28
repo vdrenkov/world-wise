@@ -3,4 +3,13 @@
   <url>
     <loc>https://world-wise-vdrenkov.netlify.app/</loc>
   </url>
+  <url>
+    <loc>https://world-wise-vdrenkov.netlify.app/product</loc>
+  </url>
+  <url>
+    <loc>https://world-wise-vdrenkov.netlify.app/pricing</loc>
+  </url>
+  <url>
+    <loc>https://world-wise-vdrenkov.netlify.app/login</loc>
+  </url>
 </urlset>
