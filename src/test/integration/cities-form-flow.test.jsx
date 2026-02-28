@@ -31,7 +31,6 @@ describe("cities form to list integration", () => {
   beforeEach(() => {
     fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    vi.spyOn(console, "log").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -47,7 +46,9 @@ describe("cities form to list integration", () => {
 
       if (
         typeof url === "string" &&
-        url.startsWith("https://api.bigdatacloud.net/data/reverse-geocode-client")
+        url.startsWith(
+          "https://api.bigdatacloud.net/data/reverse-geocode-client",
+        )
       ) {
         return Promise.resolve(
           createFetchResponse({
@@ -58,7 +59,10 @@ describe("cities form to list integration", () => {
         );
       }
 
-      if (url === "http://localhost:8800/cities" && options?.method === "POST") {
+      if (
+        url === "http://localhost:8800/cities" &&
+        options?.method === "POST"
+      ) {
         return Promise.resolve(
           createFetchResponse({
             id: 1,
