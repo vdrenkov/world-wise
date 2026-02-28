@@ -9,6 +9,7 @@ Mark visited cities on a map, browse cities/countries lists, and manage entries 
 - City and country views with route-based navigation.
 - Mock authentication flow for protected app routes.
 - Local API via `json-server` for city CRUD operations.
+- Unit and integration test coverage with Vitest + Testing Library.
 - SEO/social metadata (canonical, Open Graph, Twitter cards, WebSite JSON-LD).
 - Indexing assets: `robots.txt`, `sitemap.xml`, and SPA redirects (`_redirects`).
 - PWA metadata via `manifest.webmanifest`.
@@ -33,6 +34,8 @@ npm run dev
 The app runs on `http://localhost:5173` by default.  
 The local API runs on `http://localhost:8800`.
 
+For local app development, run `npm run server` and `npm run dev` in separate terminals.
+
 ## Scripts
 
 - `npm run dev` - start Vite dev server.
@@ -40,6 +43,15 @@ The local API runs on `http://localhost:8800`.
 - `npm run preview` - preview the production build locally.
 - `npm run lint` - run ESLint checks.
 - `npm run server` - start local JSON Server API.
+- `npm test` - run Vitest in watch mode.
+- `npm run test:run` - run Vitest once (CI-friendly).
+
+## Testing
+
+- Unit tests live in `src/test/unit`.
+- Integration tests live in `src/test/integration`.
+- Test environment is `jsdom` with `@testing-library/jest-dom` matchers.
+- Network calls are mocked in tests, so `json-server` is not required when running the test suite.
 
 ## Deployment Notes
 
