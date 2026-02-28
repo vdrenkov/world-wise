@@ -18,6 +18,12 @@ const initialState = {
   error: "",
 };
 
+function hasIdMatch(leftId, rightId) {
+  if (leftId === undefined || leftId === null) return false;
+  if (rightId === undefined || rightId === null) return false;
+  return String(leftId) === String(rightId);
+}
+
 function reducer(state, action) {
   switch (action.type) {
     case "loading":
@@ -45,9 +51,9 @@ function reducer(state, action) {
       return {
         ...state,
         isLoading: false,
-        cities: state.cities.filter((city) => city.id !== action.payload),
+        cities: state.cities.filter((city) => !hasIdMatch(city.id, action.payload)),
         currentCity:
-          state.currentCity.id === action.payload ? {} : state.currentCity,
+          hasIdMatch(state.currentCity.id, action.payload) ? {} : state.currentCity,
       };
 
     case "rejected":
@@ -102,12 +108,12 @@ function CitiesProvider({ children }) {
 
   const getCity = useCallback(
     function getCity(id) {
-      if (Number(id) === Number(currentCity.id)) return;
+      if (hasIdMatch(id, currentCity.id)) return;
 
       dispatch({ type: "loading" });
 
       try {
-        const city = cities.find((item) => Number(item.id) === Number(id));
+        const city = cities.find((item) => hasIdMatch(item.id, id));
         if (!city) throw new Error("City not found");
         dispatch({ type: "city/loaded", payload: city });
       } catch {
@@ -142,7 +148,7 @@ function CitiesProvider({ children }) {
     dispatch({ type: "loading" });
 
     try {
-      const updatedCities = cities.filter((city) => Number(city.id) !== Number(id));
+      const updatedCities = cities.filter((city) => !hasIdMatch(city.id, id));
       saveCitiesToStorage(updatedCities);
       dispatch({ type: "city/deleted", payload: id });
     } catch {

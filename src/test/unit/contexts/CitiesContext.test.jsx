@@ -8,7 +8,7 @@ const STORAGE_KEY = "worldwise.cities";
 
 const storedCities = [
   {
-    id: "1",
+    id: "city-sofia",
     cityName: "Sofia",
     country: "Bulgaria",
     emoji: "🇧🇬",
@@ -17,7 +17,7 @@ const storedCities = [
     position: { lat: "42.6977", lng: "23.3219" },
   },
   {
-    id: "2",
+    id: "city-berlin",
     cityName: "Berlin",
     country: "Germany",
     emoji: "🇩🇪",
@@ -56,11 +56,11 @@ function CitiesHarness() {
       <p data-testid="error">{error || "none"}</p>
       <p data-testid="create-result">{createResult}</p>
 
-      <button onClick={() => getCity("1")}>Load city 1</button>
+      <button onClick={() => getCity("city-sofia")}>Load Sofia</button>
       <button onClick={() => getCity("999")}>Load missing city</button>
       <button onClick={handleCreate}>Create city</button>
-      <button onClick={() => deleteCity("1")}>Delete city 1</button>
-      <button onClick={() => deleteCity("2")}>Delete city 2</button>
+      <button onClick={() => deleteCity("city-sofia")}>Delete Sofia</button>
+      <button onClick={() => deleteCity("city-berlin")}>Delete Berlin</button>
     </div>
   );
 }
@@ -85,7 +85,9 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
   });
 
@@ -115,13 +117,15 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Load city 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
     });
   });
 
@@ -135,7 +139,9 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Load missing city" }));
@@ -158,17 +164,22 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1");
+      expect(screen.getByTestId("cities")).toHaveTextContent("city-sofia");
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Create city" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,city-3");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-3",
+      );
     });
     expect(screen.getByTestId("current-city")).toHaveTextContent("city-3");
     expect(screen.getByTestId("create-result")).toHaveTextContent("true");
-    expect(readStoredCities().map((city) => city.id)).toEqual(["1", "city-3"]);
+    expect(readStoredCities().map((city) => city.id)).toEqual([
+      "city-sofia",
+      "city-3",
+    ]);
   });
 
   it("returns failure and sets an error if city creation cannot be saved", async () => {
@@ -184,7 +195,9 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Create city" }));
@@ -207,21 +220,23 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Load city 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Delete city 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sofia" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("2");
+      expect(screen.getByTestId("cities")).toHaveTextContent("city-berlin");
     });
     expect(screen.getByTestId("current-city")).toHaveTextContent("none");
-    expect(readStoredCities().map((city) => city.id)).toEqual(["2"]);
+    expect(readStoredCities().map((city) => city.id)).toEqual(["city-berlin"]);
   });
 
   it("keeps current city when deleting a different city", async () => {
@@ -234,19 +249,21 @@ describe("CitiesContext with localStorage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+      expect(screen.getByTestId("cities")).toHaveTextContent(
+        "city-sofia,city-berlin",
+      );
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Load city 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Delete city 2" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete Berlin" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("cities")).toHaveTextContent("1");
+      expect(screen.getByTestId("cities")).toHaveTextContent("city-sofia");
     });
-    expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+    expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
   });
 });
