@@ -55,4 +55,21 @@ describe("useGeolocation", () => {
     expect(result.current.error).toBeNull();
     expect(result.current.isLoading).toBe(false);
   });
+
+  it("stores a browser geolocation error when lookup fails", () => {
+    const getCurrentPosition = vi.fn((_, error) => {
+      error({ message: "User denied Geolocation" });
+    });
+    setGeolocation({ getCurrentPosition });
+
+    const { result } = renderHook(() => useGeolocation());
+
+    act(() => {
+      result.current.getPosition();
+    });
+
+    expect(getCurrentPosition).toHaveBeenCalledOnce();
+    expect(result.current.error).toBe("User denied Geolocation");
+    expect(result.current.isLoading).toBe(false);
+  });
 });
