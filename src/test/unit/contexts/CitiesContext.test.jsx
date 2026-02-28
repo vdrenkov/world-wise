@@ -52,6 +52,7 @@ function CitiesHarness() {
       <button onClick={() => getCity("1")}>Load city 1</button>
       <button onClick={() => createCity(cityToCreate)}>Create city</button>
       <button onClick={() => deleteCity(1)}>Delete city 1</button>
+      <button onClick={() => deleteCity(2)}>Delete city 2</button>
     </div>
   );
 }
@@ -186,6 +187,40 @@ describe("CitiesContext", () => {
     expect(fetchMock).toHaveBeenNthCalledWith(
       3,
       "http://localhost:8800/cities/1",
+      expect.objectContaining({ method: "DELETE" }),
+    );
+  });
+
+  it("keeps current city when deleting a different city", async () => {
+    fetchMock
+      .mockResolvedValueOnce(createFetchResponse(initialCities))
+      .mockResolvedValueOnce(createFetchResponse(initialCities[0]))
+      .mockResolvedValueOnce(createFetchResponse({}));
+
+    render(
+      <CitiesProvider>
+        <CitiesHarness />
+      </CitiesProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cities")).toHaveTextContent("1,2");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Load city 1" }));
+    await waitFor(() => {
+      expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Delete city 2" }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cities")).toHaveTextContent("1");
+    });
+    expect(screen.getByTestId("current-city")).toHaveTextContent("1");
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      "http://localhost:8800/cities/2",
       expect.objectContaining({ method: "DELETE" }),
     );
   });

@@ -36,6 +36,11 @@ The local API runs on `http://localhost:8800`.
 
 For local app development, run `npm run server` and `npm run dev` in separate terminals.
 
+## Demo Login
+
+- Email: `vdrenkov@example.com`
+- Password: `qwerty`
+
 ## Scripts
 
 - `npm run dev` - start Vite dev server.
@@ -52,6 +57,16 @@ For local app development, run `npm run server` and `npm run dev` in separate te
 - Integration tests live in `src/test/integration`.
 - Test environment is `jsdom` with `@testing-library/jest-dom` matchers.
 - Network calls are mocked in tests, so `json-server` is not required when running the test suite.
+
+## Quality Checks
+
+Run all local quality gates:
+
+```bash
+npm run lint
+npm run test:run
+npm run build
+```
 
 ## Deployment Notes
 

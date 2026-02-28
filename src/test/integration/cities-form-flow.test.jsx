@@ -6,9 +6,9 @@ import CityList from "../../components/CityList";
 import Form from "../../components/Form";
 import { CitiesProvider } from "../../contexts/CitiesContext";
 
-function createFetchResponse(payload) {
+function createFetchResponse(payload, ok = true) {
   return {
-    ok: true,
+    ok,
     json: vi.fn().mockResolvedValue(payload),
   };
 }
@@ -97,5 +97,53 @@ describe("cities form to list integration", () => {
         url === "http://localhost:8800/cities" && options?.method === "POST",
     );
     expect(postCall).toBeTruthy();
+  });
+
+  it("does not navigate to city list when city creation fails", async () => {
+    fetchMock.mockImplementation((url, options) => {
+      if (url === "http://localhost:8800/cities" && !options) {
+        return Promise.resolve(createFetchResponse([]));
+      }
+
+      if (
+        typeof url === "string" &&
+        url.startsWith(
+          "https://api.bigdatacloud.net/data/reverse-geocode-client",
+        )
+      ) {
+        return Promise.resolve(
+          createFetchResponse({
+            city: "Sofia",
+            countryName: "Bulgaria",
+            countryCode: "BG",
+          }),
+        );
+      }
+
+      if (
+        url === "http://localhost:8800/cities" &&
+        options?.method === "POST"
+      ) {
+        return Promise.resolve(createFetchResponse({}, false));
+      }
+
+      return Promise.reject(new Error(`Unexpected fetch call: ${url}`));
+    });
+
+    renderCitiesFlowApp(["/app/form?lat=42.6977&lng=23.3219"]);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("City name")).toHaveValue("Sofia");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByLabelText("Notes about your trip to Sofia"),
+      ).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText("Add your first city by clicking on a city on the map.")).not.toBeInTheDocument();
   });
 });
