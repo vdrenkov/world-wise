@@ -7,7 +7,7 @@ import {
   useReducer,
 } from "react";
 
-const BASE_URL = "http://localhost:8800";
+const STORAGE_KEY = "worldwise.cities";
 
 const CitiesContext = createContext();
 
@@ -62,6 +62,24 @@ function reducer(state, action) {
   }
 }
 
+function readCitiesFromStorage() {
+  const rawValue = localStorage.getItem(STORAGE_KEY);
+  if (!rawValue) return [];
+
+  const parsed = JSON.parse(rawValue);
+  return Array.isArray(parsed) ? parsed : [];
+}
+
+function saveCitiesToStorage(cities) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cities));
+}
+
+function createCityId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
+    return crypto.randomUUID();
+  return String(Date.now());
+}
+
 function CitiesProvider({ children }) {
   const [{ cities, isLoading, currentCity, error }, dispatch] = useReducer(
     reducer,
@@ -69,35 +87,29 @@ function CitiesProvider({ children }) {
   );
 
   useEffect(function () {
-    async function fetchCities() {
-      dispatch({ type: "loading" });
+    dispatch({ type: "loading" });
 
-      try {
-        const res = await fetch(`${BASE_URL}/cities`);
-        if (!res.ok) throw new Error("Failed to load cities");
-        const data = await res.json();
-        dispatch({ type: "cities/loaded", payload: data });
-      } catch {
-        dispatch({
-          type: "rejected",
-          payload: "There was an error loading the cities...",
-        });
-      }
+    try {
+      const storedCities = readCitiesFromStorage();
+      dispatch({ type: "cities/loaded", payload: storedCities });
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "There was an error loading the cities...",
+      });
     }
-    fetchCities();
   }, []);
 
   const getCity = useCallback(
-    async function getCity(id) {
-      if (Number(id) === currentCity.id) return;
+    function getCity(id) {
+      if (Number(id) === Number(currentCity.id)) return;
 
       dispatch({ type: "loading" });
 
       try {
-        const res = await fetch(`${BASE_URL}/cities/${id}`);
-        if (!res.ok) throw new Error("Failed to load city");
-        const data = await res.json();
-        dispatch({ type: "city/loaded", payload: data });
+        const city = cities.find((item) => Number(item.id) === Number(id));
+        if (!city) throw new Error("City not found");
+        dispatch({ type: "city/loaded", payload: city });
       } catch {
         dispatch({
           type: "rejected",
@@ -105,24 +117,17 @@ function CitiesProvider({ children }) {
         });
       }
     },
-    [currentCity.id],
+    [cities, currentCity.id],
   );
 
   const createCity = useCallback(async function createCity(newCity) {
     dispatch({ type: "loading" });
 
     try {
-      const res = await fetch(`${BASE_URL}/cities`, {
-        method: "POST",
-        body: JSON.stringify(newCity),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!res.ok) throw new Error("Failed to create city");
-      const data = await res.json();
-
-      dispatch({ type: "city/created", payload: data });
+      const cityToCreate = { ...newCity, id: createCityId() };
+      const updatedCities = [...cities, cityToCreate];
+      saveCitiesToStorage(updatedCities);
+      dispatch({ type: "city/created", payload: cityToCreate });
       return true;
     } catch {
       dispatch({
@@ -131,17 +136,14 @@ function CitiesProvider({ children }) {
       });
       return false;
     }
-  }, []);
+  }, [cities]);
 
   const deleteCity = useCallback(async function deleteCity(id) {
     dispatch({ type: "loading" });
 
     try {
-      const res = await fetch(`${BASE_URL}/cities/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete city");
-
+      const updatedCities = cities.filter((city) => Number(city.id) !== Number(id));
+      saveCitiesToStorage(updatedCities);
       dispatch({ type: "city/deleted", payload: id });
     } catch {
       dispatch({
@@ -149,7 +151,7 @@ function CitiesProvider({ children }) {
         payload: "There was an error deleting the city...",
       });
     }
-  }, []);
+  }, [cities]);
 
   const value = useMemo(
     () => ({
