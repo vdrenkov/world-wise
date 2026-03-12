@@ -1,4 +1,4 @@
-# World Wise
+# WorldWise
 
 Interactive travel-tracking app built with React, React Router, and Leaflet.  
 Mark visited cities on a map, browse cities/countries lists, and persist entries in browser `localStorage`.
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-The app runs on `http://localhost:5173` by default.  
+The app runs on `http://localhost:5173` by default.
 
 Visited cities are stored locally in your browser (`localStorage` key: `worldwise.cities`).
 
