@@ -37,7 +37,7 @@ describe("Login", () => {
     mockedUseAuth.mockReset();
   });
 
-  it("submits with default credentials", () => {
+  it("submitLogin_demoCredentials_callsLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
     render(<Login />);
@@ -47,7 +47,7 @@ describe("Login", () => {
     expect(login).toHaveBeenCalledWith("vdrenkov@example.com", "qwerty");
   });
 
-  it("does not call login when email is empty", () => {
+  it("submitLogin_emptyEmail_doesNotCallLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
     render(<Login />);
@@ -60,7 +60,7 @@ describe("Login", () => {
     expect(login).not.toHaveBeenCalled();
   });
 
-  it("redirects authenticated users to app layout", async () => {
+  it("renderLogin_demoSession_redirectsToJournal", async () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: true });
 
     render(<Login />);

@@ -27,7 +27,7 @@ describe("CityItem", () => {
     mockedUseCities.mockReset();
   });
 
-  it("builds a city details link with lat/lng query params", () => {
+  it("renderCityItem_savedTrip_linksToCoordinates", () => {
     mockedUseCities.mockReturnValue({
       currentCity: {},
       deleteCity,
@@ -41,11 +41,11 @@ describe("CityItem", () => {
 
     expect(screen.getByRole("link")).toHaveAttribute(
       "href",
-      "/1?lat=42.6977&lng=23.3219",
+      "/app/cities/1?lat=42.6977&lng=23.3219",
     );
   });
 
-  it("marks the current city item as active", () => {
+  it("renderCityItem_selectedTrip_marksActive", () => {
     mockedUseCities.mockReturnValue({
       currentCity: { id: 1 },
       deleteCity,
@@ -60,7 +60,7 @@ describe("CityItem", () => {
     expect(screen.getByRole("link").className).toContain("cityItem--active");
   });
 
-  it("deletes the city when the delete button is clicked", () => {
+  it("clickDeleteCity_savedTrip_callsDeletion", () => {
     mockedUseCities.mockReturnValue({
       currentCity: {},
       deleteCity,

@@ -35,7 +35,7 @@ describe("City", () => {
     vi.mocked(reactRouter.useParams).mockReturnValue({ id: "7" });
   });
 
-  it("loads city details on mount using route id", () => {
+  it("renderCity_routeId_loadsTrip", () => {
     mockedUseCities.mockReturnValue({
       getCity,
       isLoading: false,
@@ -52,7 +52,7 @@ describe("City", () => {
     expect(getCity).toHaveBeenCalledWith("7");
   });
 
-  it("shows a loading spinner while city details are loading", () => {
+  it("renderCity_loadingTrip_showsSpinner", () => {
     mockedUseCities.mockReturnValue({
       getCity,
       isLoading: true,
@@ -64,7 +64,7 @@ describe("City", () => {
     expect(screen.getByText("Loading city...")).toBeInTheDocument();
   });
 
-  it("renders details, notes and wiki link for the current city", () => {
+  it("renderCity_savedTrip_showsNotesAndWikipediaLink", () => {
     mockedUseCities.mockReturnValue({
       getCity,
       isLoading: false,
@@ -79,7 +79,7 @@ describe("City", () => {
     render(<City />);
 
     expect(
-      screen.getByRole("heading", { level: 3, name: /lisbon/i }),
+      screen.getByRole("heading", { level: 1, name: /lisbon/i }),
     ).toBeInTheDocument();
     expect(screen.getByText("Ocean views")).toBeInTheDocument();
     expect(
@@ -87,7 +87,7 @@ describe("City", () => {
     ).toHaveAttribute("href", "https://en.wikipedia.org/wiki/Lisbon");
   });
 
-  it("does not render notes section when notes are missing", () => {
+  it("renderCity_emptyNotes_omitsNotesSection", () => {
     mockedUseCities.mockReturnValue({
       getCity,
       isLoading: false,
@@ -101,6 +101,8 @@ describe("City", () => {
 
     render(<City />);
 
-    expect(screen.queryByRole("heading", { name: "Your notes" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Your notes" }),
+    ).not.toBeInTheDocument();
   });
 });

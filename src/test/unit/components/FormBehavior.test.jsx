@@ -1,114 +1,86 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import Form from "../../../components/Form";
 import { useCities } from "../../../contexts/CitiesContext";
-import { useUrlPosition } from "../../../hooks/useUrlPosition";
 
-const mockedNavigate = vi.fn();
+vi.mock("../../../contexts/CitiesContext", () => ({ useCities: vi.fn() }));
+const createCity = vi.fn();
 
-vi.mock("react-router", async () => {
-  const actual = await vi.importActual("react-router");
-  return {
-    ...actual,
-    useNavigate: () => mockedNavigate,
-  };
+beforeEach(() => {
+  createCity.mockReset();
+  vi.mocked(useCities).mockReturnValue({ createCity, isLoading: false });
 });
 
-vi.mock("react-datepicker", () => ({
-  default: ({ id, selected, onChange }) => (
-    <input
-      id={id}
-      data-testid="datepicker"
-      value={selected ? "selected" : ""}
-      onChange={() => onChange(selected)}
-    />
-  ),
-}));
-
-vi.mock("../../../contexts/CitiesContext", () => ({
-  useCities: vi.fn(),
-}));
-
-vi.mock("../../../hooks/useUrlPosition", () => ({
-  useUrlPosition: vi.fn(),
-}));
-
-vi.mock("../../../components/BackButton", () => ({
-  default: () => <button type="button">Back</button>,
-}));
-
-const mockedUseCities = vi.mocked(useCities);
-const mockedUseUrlPosition = vi.mocked(useUrlPosition);
-
-describe("Form submission behavior", () => {
-  const createCity = vi.fn();
-  let fetchMock;
-
-  beforeEach(() => {
-    createCity.mockReset();
-    mockedNavigate.mockReset();
-    mockedUseCities.mockReset();
-    mockedUseUrlPosition.mockReset();
-
-    fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
-
-    mockedUseUrlPosition.mockReturnValue(["42.6977", "23.3219"]);
-    mockedUseCities.mockReturnValue({ createCity, isLoading: false });
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it("navigates to cities list when city creation succeeds", async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue({
-        city: "Sofia",
-        countryName: "Bulgaria",
-        countryCode: "BG",
-      }),
-    });
-    createCity.mockResolvedValue(true);
-
-    render(<Form />);
-
-    await waitFor(() => {
-      expect(screen.getByLabelText("City name")).toHaveValue("Sofia");
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
-
-    await waitFor(() => {
-      expect(createCity).toHaveBeenCalledOnce();
-    });
-    expect(mockedNavigate).toHaveBeenCalledWith("/app/cities");
-  });
-
-  it("does not navigate when city creation fails", async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue({
-        city: "Sofia",
-        countryName: "Bulgaria",
-        countryCode: "BG",
-      }),
-    });
+describe("Trip form", () => {
+  it("submitTrip_validManualEntry_passesTypedDataWithoutGeocoding", async () => {
     createCity.mockResolvedValue(false);
-
-    render(<Form />);
-
-    await waitFor(() => {
-      expect(screen.getByLabelText("City name")).toHaveValue("Sofia");
+    render(
+      <MemoryRouter initialEntries={["/app/form?lat=0&lng=0"]}>
+        <Form />
+      </MemoryRouter>,
+    );
+    fireEvent.change(screen.getByLabelText("City name"), {
+      target: { value: "  Null Island  " },
     });
-
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
-
-    await waitFor(() => {
-      expect(createCity).toHaveBeenCalledOnce();
+    fireEvent.change(screen.getByLabelText("Country"), {
+      target: { value: "Atlantic Ocean" },
     });
-    expect(mockedNavigate).not.toHaveBeenCalledWith("/app/cities");
+    fireEvent.change(screen.getByLabelText("Visit date"), {
+      target: { value: "2026-01-20" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add", exact: true }));
+
+    await waitFor(() =>
+      expect(createCity).toHaveBeenCalledWith({
+        cityName: "Null Island",
+        country: "Atlantic Ocean",
+        emoji: "📍",
+        date: "2026-01-20",
+        notes: "",
+        position: { lat: 0, lng: 0 },
+      }),
+    );
+    expect(screen.getByLabelText("City name")).toHaveValue("  Null Island  ");
+  });
+
+  it("submitTrip_invalidEntry_showsValidationWithoutSaving", () => {
+    render(
+      <MemoryRouter initialEntries={["/app/form?lat=0&lng=0"]}>
+        <Form />
+      </MemoryRouter>,
+    );
+    fireEvent.submit(
+      screen.getByRole("button", { name: "Add", exact: true }).closest("form"),
+    );
+
+    expect(createCity).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Enter a city, country, valid coordinates",
+    );
+  });
+
+  it("submitTrip_futureDate_rejectsUnvisitedPlace", () => {
+    render(
+      <MemoryRouter initialEntries={["/app/form?lat=0&lng=0"]}>
+        <Form />
+      </MemoryRouter>,
+    );
+    fireEvent.change(screen.getByLabelText("City name"), {
+      target: { value: "Paris" },
+    });
+    fireEvent.change(screen.getByLabelText("Country"), {
+      target: { value: "France" },
+    });
+    fireEvent.change(screen.getByLabelText("Visit date"), {
+      target: { value: "2999-01-01" },
+    });
+    fireEvent.submit(
+      screen.getByRole("button", { name: "Add", exact: true }).closest("form"),
+    );
+
+    expect(createCity).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert")).toHaveTextContent("not in the future");
   });
 });

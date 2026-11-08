@@ -1,19 +1,63 @@
 .sidebar {
-  flex-basis: 56rem;
-  background-color: var(--color-dark--1);
-  padding: 3rem 5rem 3.5rem 5rem;
-
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: calc(100vh - 4.8rem);
+  min-height: 0;
+  background: var(--paper);
+  z-index: 1;
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
 }
-
+.intro {
+  padding: 1.7rem 1.5rem 1.5rem;
+}
+.intro > p {
+  font-size: 0.6rem;
+}
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.stats > span {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.stats strong {
+  color: var(--ink);
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.stats a {
+  margin-left: auto;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.75rem;
+  min-height: 44px;
+}
+.content {
+  padding: 1.5rem;
+  flex: 1;
+}
 .footer {
   margin-top: auto;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.65rem;
+  padding: 1rem;
+  border-top: 1px solid var(--line);
 }
-
-.copyright {
-  font-size: 1.2rem;
-  color: var(--color-light--1);
+.sidebar > :global(.alert) {
+  margin: 1rem 1.5rem 0;
+}
+@media (max-width: 700px) {
+  .sidebar {
+    overflow: visible;
+    border: none;
+  }
+  .content {
+    min-height: 280px;
+  }
 }

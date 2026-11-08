@@ -1,67 +1,249 @@
-@import "https://unpkg.com/leaflet@1.9.3/dist/leaflet.css";
-@import "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap";
+@import "leaflet/dist/leaflet.css";
 
 :root {
-  --color-brand--1: #ffb545;
-  --color-brand--2: #00c46a;
-
-  --color-dark--0: #242a2e;
-  --color-dark--1: #2d3439;
-  --color-dark--2: #42484d;
-  --color-light--1: #aaa;
-  --color-light--2: #ececec;
-  --color-light--3: #d6dee0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #173b45;
+  background: #f7f6f0;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --ink: #173b45;
+  --muted: #52656a;
+  --paper: #f7f6f0;
+  --line: #d7ded9;
+  --accent: #f2c75c;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
-}
-
-html {
-  font-size: 62.5%;
   box-sizing: border-box;
 }
-
 body {
-  font-family: "Manrope", sans-serif;
-  color: var(--color-light--2);
-  font-weight: 400;
+  margin: 0;
+  min-width: 320px;
   line-height: 1.6;
 }
-
-label {
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-
+button,
 input,
 textarea {
-  width: 100%;
-  padding: 0.8rem 1.2rem;
-  font-family: inherit;
-  font-size: 1.6rem;
-  border: none;
-  border-radius: 5px;
-  background-color: var(--color-light--3);
-  transition: all 0.2s;
+  font: inherit;
 }
-
-input:focus {
+button,
+a,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+a {
+  color: inherit;
+  text-underline-offset: 4px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.leaflet-container:focus-visible {
+  outline: 3px solid #a5441f;
+  outline-offset: 4px;
+}
+main:focus {
   outline: none;
-  background-color: #fff;
 }
-
-.cta:link,
-.cta:visited {
-  display: inline-block;
-  background-color: var(--color-brand--2);
-  color: var(--color-dark--1);
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+}
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  letter-spacing: -0.035em;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.muted {
+  color: var(--muted);
+}
+.cta {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  min-height: 48px;
+  padding: 0.8rem 1.4rem;
   text-decoration: none;
-  font-size: 1.6rem;
+  background: var(--ink);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 1rem 3rem;
-  border-radius: 5px;
+}
+.cta:hover {
+  background: #28535d;
+}
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+.field label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+input,
+textarea {
+  padding: 0.75rem 0.9rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #9cadaa;
+  border-radius: 4px;
+  width: 100%;
+  min-height: 48px;
+  min-width: 0;
+}
+textarea {
+  resize: vertical;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #667779;
+}
+.alert {
+  color: #72351f;
+  background: #fff0e7;
+  border: 1px solid #d7b39b;
+  border-radius: 4px;
+  padding: 0.9rem;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.alert button {
+  background: transparent;
+  border: 0;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: underline;
+  padding: 0.3rem 0.6rem 0.3rem 0;
+  font-weight: 600;
+}
+.section-heading {
+  margin-bottom: 1.25rem;
+}
+.section-heading h1 {
+  font-size: 1.9rem;
+}
+.section-heading span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 0.45rem;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem 0.5rem;
+}
+.empty-state > span {
+  font-size: 4rem;
+  color: #4d746c;
+}
+.empty-state h1 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+.public-page {
+  max-width: 1440px;
+  margin: auto;
+  padding: 0 5vw;
+}
+.not-found {
+  padding: 15vh 1rem;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  padding: 0.8rem 1.2rem;
+  background: white;
+  z-index: 10000;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.leaflet-container {
+  font-family: inherit;
+  background: #d9e5df;
+}
+.leaflet-control-attribution {
+  color: #24434a;
+}
+.leaflet-control-attribution a {
+  color: #24434a;
+}
+.leaflet-control-zoom a {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+}
+.leaflet-container a.leaflet-popup-close-button {
+  min-width: 30px;
+  min-height: 30px;
+}
+.leaflet-popup-content a {
+  color: #173b45;
+  font-size: 0.95rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

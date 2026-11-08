@@ -16,7 +16,7 @@ describe("ProtectedRoute", () => {
     mockedUseAuth.mockReset();
   });
 
-  it("redirects unauthenticated users to the homepage", async () => {
+  it("renderProtectedRoute_anonymousSession_redirectsHome", async () => {
     mockedUseAuth.mockReturnValue({
       isAuthenticated: false,
     });
@@ -43,7 +43,7 @@ describe("ProtectedRoute", () => {
     expect(screen.queryByText("Private app")).not.toBeInTheDocument();
   });
 
-  it("renders children when the user is authenticated", () => {
+  it("renderProtectedRoute_demoSession_showsChildren", () => {
     mockedUseAuth.mockReturnValue({
       isAuthenticated: true,
     });

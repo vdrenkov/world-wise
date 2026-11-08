@@ -12,15 +12,19 @@ function AuthHarness() {
         {isAuthenticated ? "authenticated" : "anonymous"}
       </p>
       <p data-testid="username">{user?.name ?? "none"}</p>
-      <button onClick={() => login("wrong@example.com", "wrong")}>Login invalid</button>
-      <button onClick={() => login("vdrenkov@example.com", "qwerty")}>Login valid</button>
+      <button onClick={() => login("wrong@example.com", "wrong")}>
+        Login invalid
+      </button>
+      <button onClick={() => login("vdrenkov@example.com", "qwerty")}>
+        Login valid
+      </button>
       <button onClick={logout}>Logout</button>
     </div>
   );
 }
 
 describe("FakeAuthContext", () => {
-  it("keeps the user unauthenticated for invalid credentials", () => {
+  it("login_invalidCredentials_keepsAnonymousSession", () => {
     render(
       <AuthProvider>
         <AuthHarness />
@@ -33,7 +37,7 @@ describe("FakeAuthContext", () => {
     expect(screen.getByTestId("username")).toHaveTextContent("none");
   });
 
-  it("logs in with valid credentials and can log out", () => {
+  it("login_demoCredentials_startsAndEndsSession", () => {
     render(
       <AuthProvider>
         <AuthHarness />

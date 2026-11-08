@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import Button from "../../../components/Button";
 
 describe("Button", () => {
-  it("renders children and type class", () => {
+  it("renderButton_primaryVariant_showsLabelAndStyle", () => {
     render(<Button type="primary">Save</Button>);
 
     const button = screen.getByRole("button", { name: "Save" });
@@ -12,7 +12,7 @@ describe("Button", () => {
     expect(button.className).toContain("primary");
   });
 
-  it("calls onClick handler when clicked", () => {
+  it("clickButton_enabled_callsHandler", () => {
     const onClick = vi.fn();
     render(
       <Button type="back" onClick={onClick}>

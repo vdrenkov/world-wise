@@ -29,7 +29,7 @@ describe("User", () => {
     mockedUseAuth.mockReset();
   });
 
-  it("renders current user info", () => {
+  it("renderUser_demoSession_showsNameAndDisclosure", () => {
     mockedUseAuth.mockReturnValue({
       user: {
         name: "Valentin",
@@ -40,11 +40,11 @@ describe("User", () => {
 
     render(<User />);
 
-    expect(screen.getByAltText("Valentin")).toBeInTheDocument();
-    expect(screen.getByText("Welcome, Valentin")).toBeInTheDocument();
+    expect(screen.getByText(/Welcome, Valentin/)).toBeInTheDocument();
+    expect(screen.getByText("Local demo journal")).toBeInTheDocument();
   });
 
-  it("logs out and navigates home on logout click", () => {
+  it("logout_demoSession_returnsHome", () => {
     mockedUseAuth.mockReturnValue({
       user: {
         name: "Valentin",

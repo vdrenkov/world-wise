@@ -4,15 +4,17 @@ import { describe, expect, it } from "vitest";
 import Message from "../../../components/Message";
 
 describe("Message", () => {
-  it("renders the passed message text", () => {
+  it("renderMessage_providedText_showsMessage", () => {
     render(<Message message="No cities yet." />);
 
     expect(screen.getByText("No cities yet.")).toBeInTheDocument();
   });
 
-  it("renders an accessible waving hand icon", () => {
+  it("renderMessage_defaultIcon_hasAccessibleName", () => {
     render(<Message message="Add your first city." />);
 
-    expect(screen.getByRole("img", { name: "Waving hand" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Waving hand" }),
+    ).toBeInTheDocument();
   });
 });
