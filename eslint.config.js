@@ -1,5 +1,5 @@
 import js from "@eslint/js";
-import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import-x";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
@@ -17,15 +17,15 @@ export default [
       },
     },
     plugins: {
-      import: importPlugin,
+      "import-x": importPlugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs["recommended-latest"].rules,
-      "import/no-duplicates": "error",
-      "import/order": [
+      "import-x/no-duplicates": "error",
+      "import-x/order": [
         "error",
         {
           "newlines-between": "always",
