@@ -34,26 +34,26 @@ function City() {
 
   return (
     <div className={styles.city}>
-      <div className={styles.row}>
+      <div>
         <p className="eyebrow">From your journal</p>
         <h1>
           <span>{emoji}</span> {cityName}
         </h1>
       </div>
 
-      <div className={styles.row}>
+      <div>
         <h2>You went to {cityName} on</h2>
         <time dateTime={date}>{formatDate(date)}</time>
       </div>
 
       {notes && (
-        <div className={styles.row}>
+        <div>
           <h2>Your notes</h2>
           <p>{notes}</p>
         </div>
       )}
 
-      <div className={styles.row}>
+      <div>
         <h2>Learn more</h2>
         <a
           href={`https://en.wikipedia.org/wiki/${encodeURIComponent(cityName)}`}

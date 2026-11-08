@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -67,7 +67,7 @@ function NavigationEffects() {
   const { pathname } = useLocation();
   const previousRef = useRef(pathname);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.title = `${pathname.startsWith("/app") ? "Your journal" : "Track your travels"} | WorldWise`;
 
     if (previousRef.current !== pathname) {

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+z.config({ jitless: true });
+
 export const positionSchema = z.object({
   lat: z.number().finite().min(-90).max(90),
   lng: z.number().finite().min(-180).max(180),
@@ -16,6 +18,9 @@ export const newCitySchema = z.object({
 
 export const citySchema = newCitySchema.extend({
   id: z.string().min(1).max(100),
+  cityName: z.string().trim().min(1),
+  country: z.string().trim().min(1),
+  notes: z.string(),
 });
 
 export type Position = z.infer<typeof positionSchema>;

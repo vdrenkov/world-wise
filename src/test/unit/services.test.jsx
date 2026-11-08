@@ -22,6 +22,18 @@ afterEach(() => {
 });
 
 describe("City storage", () => {
+  it("saveCities_longLegacyNotes_preservesExistingJournalDuringNewWrites", () => {
+    const legacyCity = {
+      ...sofia,
+      notes: "A long travel memory. ".repeat(200),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([legacyCity]));
+    const loaded = readCities();
+    saveCities(loaded);
+
+    expect(readCities()).toEqual([legacyCity]);
+  });
+
   it("readCities_emptyStorage_returnsEmptyJournal", () =>
     expect(readCities()).toEqual([]));
 
