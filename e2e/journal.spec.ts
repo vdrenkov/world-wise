@@ -15,6 +15,40 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
+test("recenterMap_draftTrip_keepsSelectedCoordinatesAndEnteredDetails", async ({
+  page,
+}) => {
+  await mockGeolocation(page, true);
+  await enterJournal(page, [sofia]);
+  await page.getByRole("link", { name: "+ Add a place" }).click();
+  await page.getByLabel("Latitude", { exact: true }).fill("52.52");
+  await page.getByLabel("Longitude", { exact: true }).fill("13.405");
+  await fillTrip(page, "Berlin", "Germany");
+  await page.getByLabel(/Trip notes/).fill("Keep this memory.");
+  const marker = page.locator(".leaflet-marker-icon");
+  const previousMarker = await readMarkerMapOffset(page);
+  expect(previousMarker).toBeDefined();
+  await page.getByRole("button", { name: "Use your position" }).click();
+  await expect(
+    page.getByRole("button", { name: "Use your position" }),
+  ).toBeEnabled();
+  await expect(page.getByLabel("City name")).toHaveValue("Berlin");
+  await expect(page.getByLabel(/Trip notes/)).toHaveValue("Keep this memory.");
+  await expect
+    .poll(async () => readMarkerMapOffset(page))
+    .not.toBe(previousMarker);
+  await expect(marker).toBeVisible();
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await expect(page.getByRole("link", { name: /Berlin/ })).toBeVisible();
+  expect(
+    (await readJournal(page)).find((city) => city.cityName === "Berlin")
+      ?.position,
+  ).toEqual({
+    lat: 52.52,
+    lng: 13.405,
+  });
+});
+
 test("renderJournal_securityHeaders_allowsRequiredAssetsWithoutPolicyViolations", async ({
   page,
 }) => {
@@ -367,6 +401,16 @@ async function enterJournal(page: Page, cities: City[] = []) {
   await page.reload();
   await page.getByRole("button", { name: "Login", exact: true }).click();
   await expect(page.getByRole("link", { name: "+ Add a place" })).toBeVisible();
+}
+
+async function readMarkerMapOffset(page: Page) {
+  return page.locator(".leaflet-container").evaluate((container) => {
+    const marker = container.querySelector(".leaflet-marker-icon");
+    return marker
+      ? marker.getBoundingClientRect().top -
+          container.getBoundingClientRect().top
+      : undefined;
+  });
 }
 
 async function fillTrip(page: Page, cityName: string, country: string) {

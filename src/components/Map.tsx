@@ -11,7 +11,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { useCities } from "../contexts/CitiesContext";
 import { useGeolocation } from "../hooks/useGeolocation";
@@ -19,6 +19,7 @@ import { useUrlPosition } from "../hooks/useUrlPosition";
 import Button from "./Button";
 import styles from "./Map.module.css";
 
+import type { Position } from "../types";
 import type { LatLngTuple } from "leaflet";
 
 const pin = new Icon({
@@ -32,23 +33,20 @@ const pin = new Icon({
 });
 
 export default function WorldMap() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { cities } = useCities();
   const [latitude, longitude] = useUrlPosition();
-  const { isLoading, error, getPosition } = useGeolocation();
+  const {
+    isLoading,
+    position: locatedPosition,
+    error,
+    getPosition,
+  } = useGeolocation();
   const [tilesUnavailable, setTilesUnavailable] = useState(false);
   const center: LatLngTuple =
     latitude !== null && longitude !== null ? [latitude, longitude] : [35, 15];
 
   async function handleLocate() {
-    const position = await getPosition();
-
-    if (position) {
-      await navigate(
-        `${location.pathname}?lat=${position.lat}&lng=${position.lng}`,
-      );
-    }
+    await getPosition();
   }
 
   return (
@@ -107,7 +105,7 @@ export default function WorldMap() {
             </Popup>
           </Marker>
         ))}
-        <MapEvents position={center} />
+        <MapEvents position={center} locatedPosition={locatedPosition} />
       </MapContainer>
       <p className={styles.caption}>
         A pin for every place. A story for every stop.
@@ -116,7 +114,13 @@ export default function WorldMap() {
   );
 }
 
-function MapEvents({ position }: { position: LatLngTuple }) {
+function MapEvents({
+  position,
+  locatedPosition,
+}: {
+  position: LatLngTuple;
+  locatedPosition?: Position;
+}) {
   const navigate = useNavigate();
   const map = useMap();
   const [latitude, longitude] = position;
@@ -124,6 +128,12 @@ function MapEvents({ position }: { position: LatLngTuple }) {
   useEffect(() => {
     map.setView([latitude, longitude]);
   }, [map, latitude, longitude]);
+
+  useEffect(() => {
+    if (locatedPosition) {
+      map.setView([locatedPosition.lat, locatedPosition.lng]);
+    }
+  }, [map, locatedPosition]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => map.invalidateSize());
