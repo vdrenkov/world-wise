@@ -21,7 +21,7 @@ export default class AppErrorBoundary extends Component<
           <p>
             Your saved trips are still in this browser. Reload to try again.
           </p>
-          <a className="cta" href="/">
+          <a tabIndex={0} className="cta" href="/">
             Reload WorldWise
           </a>
         </main>

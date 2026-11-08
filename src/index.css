@@ -62,6 +62,9 @@ textarea:focus-visible,
 main:focus {
   outline: none;
 }
+.page-content:focus {
+  outline: none;
+}
 h1,
 h2,
 h3,

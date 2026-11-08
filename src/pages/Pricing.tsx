@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+import PageContent from "../components/PageContent";
 import PageNav from "../components/PageNav";
 import styles from "./Product.module.css";
 
@@ -7,7 +8,7 @@ export default function Pricing() {
   return (
     <div className={styles.product}>
       <PageNav />
-      <section>
+      <PageContent>
         <div>
           <p className="eyebrow">No subscription. Just stories.</p>
           <h1>Free to explore.</h1>
@@ -20,7 +21,7 @@ export default function Pricing() {
             removes them. Use a personal browser for your journal and avoid
             storing sensitive information on a shared device.
           </p>
-          <Link className="cta" to="/login">
+          <Link tabIndex={0} className="cta" to="/login">
             Open the demo ↗
           </Link>
         </div>
@@ -30,7 +31,7 @@ export default function Pricing() {
           width="1000"
           height="1000"
         />
-      </section>
+      </PageContent>
     </div>
   );
 }

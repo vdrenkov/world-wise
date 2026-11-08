@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+import PageContent from "../components/PageContent";
 import PageNav from "../components/PageNav";
 import styles from "./Product.module.css";
 
@@ -7,7 +8,7 @@ export default function Product() {
   return (
     <div className={styles.product}>
       <PageNav />
-      <section>
+      <PageContent>
         <img
           src="/img-1.jpg"
           alt="A traveller and a dog watching the sunset over the mountains"
@@ -27,11 +28,11 @@ export default function Product() {
             sharing service, or cross-device sync. Map tiles and optional
             current-location naming use external providers.
           </p>
-          <Link className="cta" to="/login">
+          <Link tabIndex={0} className="cta" to="/login">
             Make your first memory ↗
           </Link>
         </div>
-      </section>
+      </PageContent>
     </div>
   );
 }

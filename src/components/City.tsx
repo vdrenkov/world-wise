@@ -56,6 +56,7 @@ function City() {
       <div>
         <h2>Learn more</h2>
         <a
+          tabIndex={0}
           href={`https://en.wikipedia.org/wiki/${encodeURIComponent(cityName)}`}
           target="_blank"
           rel="noreferrer"

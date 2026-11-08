@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useRef } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -28,7 +28,7 @@ function App() {
     <AuthProvider>
       <CitiesProvider>
         <BrowserRouter>
-          <a className="skip-link" href="#main-content" tabIndex={0}>
+          <a className="skip-link" href="#page-content" tabIndex={0}>
             Skip to content
           </a>
           <NavigationEffects />
@@ -65,15 +65,8 @@ function App() {
 
 function NavigationEffects() {
   const { pathname } = useLocation();
-  const previousRef = useRef(pathname);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     document.title = `${pathname.startsWith("/app") ? "Your journal" : "Track your travels"} | WorldWise`;
-
-    if (previousRef.current !== pathname) {
-      document.getElementById("main-content")?.focus();
-      previousRef.current = pathname;
-    }
   }, [pathname]);
   return null;
 }

@@ -17,6 +17,7 @@ function CityItem({ city }: { city: City }) {
   return (
     <li className={styles.cityRow}>
       <Link
+        tabIndex={0}
         className={`${styles.cityItem} ${
           id === currentCity?.id ? styles["cityItem--active"] : ""
         }`}

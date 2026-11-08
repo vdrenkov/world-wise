@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import Button from "../components/Button";
+import PageContent from "../components/PageContent";
 import PageNav from "../components/PageNav";
 import { useAuth } from "../contexts/FakeAuthContext";
 import styles from "./Login.module.css";
@@ -35,7 +36,7 @@ export default function Login() {
   return (
     <div className={styles.login}>
       <PageNav />
-      <section className={styles.panel}>
+      <PageContent className={styles.panel}>
         <div>
           <p className="eyebrow">The next page is yours</p>
           <h1>A world of memories awaits.</h1>
@@ -87,7 +88,7 @@ export default function Login() {
             <code>vdrenkov@example.com</code> / <code>qwerty</code>
           </p>
         </form>
-      </section>
+      </PageContent>
     </div>
   );
 }

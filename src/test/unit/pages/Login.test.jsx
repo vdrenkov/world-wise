@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAuth } from "../../../contexts/FakeAuthContext";
@@ -40,7 +41,11 @@ describe("Login", () => {
   it("submitLogin_demoCredentials_callsLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
 
@@ -50,7 +55,11 @@ describe("Login", () => {
   it("submitLogin_emptyEmail_doesNotCallLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     fireEvent.change(screen.getByLabelText("Email address"), {
       target: { value: "" },
@@ -63,7 +72,11 @@ describe("Login", () => {
   it("renderLogin_demoSession_redirectsToJournal", async () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: true });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => {
       expect(mockedNavigate).toHaveBeenCalledWith("/app", { replace: true });

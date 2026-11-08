@@ -266,7 +266,9 @@ function TripForm({ position }: { position?: Position }) {
           <Button type="primary" htmlType="submit" disabled={busy}>
             {isLoading ? "Saving…" : "Add"}
           </Button>
-          <Link to="/app/cities">Cancel</Link>
+          <Link tabIndex={0} to="/app/cities">
+            Cancel
+          </Link>
         </div>
       </form>
     </section>

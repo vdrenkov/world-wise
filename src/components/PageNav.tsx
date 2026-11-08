@@ -10,13 +10,17 @@ function PageNav() {
 
       <ul>
         <li>
-          <NavLink to="/pricing">Free demo</NavLink>
+          <NavLink tabIndex={0} to="/pricing">
+            Free demo
+          </NavLink>
         </li>
         <li>
-          <NavLink to="/product">The journal</NavLink>
+          <NavLink tabIndex={0} to="/product">
+            The journal
+          </NavLink>
         </li>
         <li>
-          <NavLink to="/login" className={styles.ctaLink}>
+          <NavLink tabIndex={0} to="/login" className={styles.ctaLink}>
             Login
           </NavLink>
         </li>

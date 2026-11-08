@@ -4,7 +4,12 @@ import styles from "./Logo.module.css";
 
 export default function Logo() {
   return (
-    <Link to="/" className={styles.logo} aria-label="WorldWise home">
+    <Link
+      tabIndex={0}
+      to="/"
+      className={styles.logo}
+      aria-label="WorldWise home"
+    >
       <svg
         viewBox="0 0 40 40"
         width="36"

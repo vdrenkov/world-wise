@@ -7,10 +7,14 @@ function AppNav() {
     <nav className={styles.nav} aria-label="Journal navigation">
       <ul>
         <li>
-          <NavLink to="cities">Cities</NavLink>
+          <NavLink tabIndex={0} to="cities">
+            Cities
+          </NavLink>
         </li>
         <li>
-          <NavLink to="countries">Countries</NavLink>
+          <NavLink tabIndex={0} to="countries">
+            Countries
+          </NavLink>
         </li>
       </ul>
     </nav>

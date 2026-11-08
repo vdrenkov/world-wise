@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+import PageContent from "../components/PageContent";
 import PageNav from "../components/PageNav";
 import styles from "./Homepage.module.css";
 
@@ -7,7 +8,7 @@ export default function Homepage() {
   return (
     <div className={styles.homepage}>
       <PageNav />
-      <section className={styles.hero}>
+      <PageContent className={styles.hero}>
         <div className={styles.copy}>
           <p className="eyebrow">Your personal travel journal</p>
           <h1>
@@ -19,7 +20,7 @@ export default function Homepage() {
             The café you stumbled into. The view you still think about. Give
             every place a pin, and every memory a home.
           </p>
-          <Link to="/login" className="cta">
+          <Link tabIndex={0} to="/login" className="cta">
             Start your journal <span aria-hidden="true">↗</span>
           </Link>
           <p className={styles.note}>Free to explore. Saved in your browser.</p>
@@ -48,7 +49,7 @@ export default function Homepage() {
             </span>
           </div>
         </div>
-      </section>
+      </PageContent>
       <section className={styles.features} aria-label="How your journal works">
         <article>
           <span>01 / EXPLORE</span>

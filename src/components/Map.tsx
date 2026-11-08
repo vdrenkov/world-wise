@@ -70,7 +70,9 @@ export default function WorldMap() {
       {tilesUnavailable && (
         <p className={styles.notice} role="status">
           Map tiles are unavailable. Your journal still works.{" "}
-          <Link to="/app/form">Add a place using coordinates.</Link>
+          <Link tabIndex={0} to="/app/form">
+            Add a place using coordinates.
+          </Link>
         </p>
       )}
       <MapContainer
@@ -97,6 +99,7 @@ export default function WorldMap() {
           >
             <Popup>
               <Link
+                tabIndex={0}
                 to={`/app/cities/${encodeURIComponent(city.id)}?lat=${city.position.lat}&lng=${city.position.lng}`}
               >
                 {city.cityName}

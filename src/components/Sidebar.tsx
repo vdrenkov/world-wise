@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router";
 
 import { useCities } from "../contexts/CitiesContext";
 import AppNav from "./AppNav";
+import PageContent from "./PageContent";
 import styles from "./Sidebar.module.css";
 
 export default function Sidebar() {
@@ -32,7 +33,7 @@ export default function Sidebar() {
             <strong>{countries}</strong>{" "}
             {countries === 1 ? "country" : "countries"}
           </span>
-          <Link to="/app/form" className="cta">
+          <Link tabIndex={0} to="/app/form" className="cta">
             + Add a place
           </Link>
         </div>
@@ -51,9 +52,9 @@ export default function Sidebar() {
           )}
         </div>
       )}
-      <div className={styles.content}>
+      <PageContent className={styles.content}>
         <Outlet />
-      </div>
+      </PageContent>
       <footer className={styles.footer}>
         Saved in this browser · No cloud sync
       </footer>
