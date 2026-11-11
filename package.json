@@ -1,7 +1,6 @@
 {
   "name": "world-wise",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "packageManager": "npm@12.2.2",
   "engines": {
