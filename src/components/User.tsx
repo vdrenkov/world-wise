@@ -19,7 +19,7 @@ export default function User() {
       </span>
       <span className={styles.name}>
         Welcome, {user?.name}
-        <small>Local demo journal</small>
+        <small>Your travel journal</small>
       </span>
       <button type="button" onClick={handleClick}>
         Logout

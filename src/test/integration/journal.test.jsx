@@ -229,7 +229,7 @@ describe("Complete journal", () => {
     expect(await screen.findByText("0.0000, 10.0000")).toBeInTheDocument();
   });
 
-  it("openPublicPages_navigation_rendersAccurateProductAndDemoCopy", async () => {
+  it("openPublicPages_navigation_rendersProductAndPricing", async () => {
     render(<App />);
     fireEvent.click(await screen.findByRole("link", { name: "The journal" }));
     expect(
@@ -237,7 +237,7 @@ describe("Complete journal", () => {
         name: "A small home for big adventures.",
       }),
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("link", { name: "Free demo" }));
+    fireEvent.click(screen.getByRole("link", { name: "Pricing" }));
     expect(
       await screen.findByRole("heading", { name: "Free to explore." }),
     ).toBeInTheDocument();

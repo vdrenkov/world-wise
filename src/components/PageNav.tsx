@@ -11,7 +11,7 @@ function PageNav() {
       <ul>
         <li>
           <NavLink tabIndex={0} to="/pricing">
-            Free demo
+            Pricing
           </NavLink>
         </li>
         <li>

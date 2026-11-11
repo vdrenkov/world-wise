@@ -13,16 +13,14 @@ export default function Pricing() {
           <p className="eyebrow">No subscription. Just stories.</p>
           <h1>Free to explore.</h1>
           <p>
-            This is a portfolio demo, open for you to try. Add places, explore
-            the map, and make it your own. There are no payments or paid plans.
+            Keep your travel memories in one place. Pin cities, revisit your
+            notes and see where you’ve been.
           </p>
           <p>
-            Trips are saved in this browser’s local storage. Clearing site data
-            removes them. Use a personal browser for your journal and avoid
-            storing sensitive information on a shared device.
+            Your journal stays on this device, ready for the next adventure.
           </p>
           <Link tabIndex={0} className="cta" to="/login">
-            Open the demo ↗
+            Open your journal ↗
           </Link>
         </div>
         <img
