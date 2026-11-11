@@ -1,37 +1,78 @@
 .mapContainer {
-  flex: 1;
-  height: 100%;
-  background-color: var(--color-dark--2);
   position: relative;
-}
-
-.map {
-  height: 100%;
-}
-
-:global(.leaflet-popup .leaflet-popup-content-wrapper) {
-  background-color: var(--color-dark--1);
-  color: var(--color-light--2);
-  border-radius: 5px;
-  padding-right: 0.6rem;
-}
-
-:global(.leaflet-popup .leaflet-popup-content) {
-  font-size: 1.5rem;
   display: flex;
+  flex-direction: column;
+  min-height: 0;
+  isolation: isolate;
+  background: #d9e5df;
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #c3dfcf;
+  border-bottom: 1px solid #83ab98;
 }
-
-:global(.leaflet-popup .leaflet-popup-content span:first-child) {
-  font-size: 2.5rem;
-  line-height: 1;
+.toolbar strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
 }
-
-:global(.leaflet-popup .leaflet-popup-tip) {
-  background-color: var(--color-dark--1);
+.toolbar small {
+  color: var(--muted);
+  font-size: 0.7rem;
 }
-
-:global(.leaflet-popup-content-wrapper) {
-  border-left: 5px solid var(--color-brand--2);
+.map {
+  width: 100%;
+  flex: 1;
+  min-height: 240px;
+  z-index: 0;
+}
+.notice {
+  padding: 0.6rem 1rem;
+  background: #fff0e7;
+  color: #72351f;
+  font-size: 0.8rem;
+}
+.caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  pointer-events: none;
+  border-radius: 3px;
+  box-shadow: 0 3px 15px #173b451a;
+}
+@media (max-width: 900px) {
+  .toolbar {
+    padding: 0.8rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .toolbar strong {
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 700px) {
+  .mapContainer {
+    height: 330px;
+    min-height: 330px;
+    order: -1;
+  }
+  .toolbar {
+    flex-wrap: nowrap;
+    padding: 0.7rem 1rem;
+  }
+  .toolbar small {
+    display: none;
+  }
+  .caption {
+    display: none;
+  }
 }

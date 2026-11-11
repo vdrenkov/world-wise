@@ -31,9 +31,9 @@ const cityToCreate = {
   cityName: "Madrid",
   country: "Spain",
   emoji: "🇪🇸",
-  date: "2026-01-20T00:00:00.000Z",
+  date: "2026-01-20",
   notes: "Sunny city",
-  position: { lat: "40.4168", lng: "-3.7038" },
+  position: { lat: 40.4168, lng: -3.7038 },
 };
 
 function readStoredCities() {
@@ -41,7 +41,8 @@ function readStoredCities() {
 }
 
 function CitiesHarness() {
-  const { cities, currentCity, error, getCity, createCity, deleteCity } = useCities();
+  const { cities, currentCity, error, getCity, createCity, deleteCity } =
+    useCities();
   const [createResult, setCreateResult] = useState("none");
 
   async function handleCreate() {
@@ -51,8 +52,10 @@ function CitiesHarness() {
 
   return (
     <div>
-      <p data-testid="cities">{cities.map((city) => city.id).join(",") || "none"}</p>
-      <p data-testid="current-city">{currentCity.id ?? "none"}</p>
+      <p data-testid="cities">
+        {cities.map((city) => city.id).join(",") || "none"}
+      </p>
+      <p data-testid="current-city">{currentCity?.id ?? "none"}</p>
       <p data-testid="error">{error || "none"}</p>
       <p data-testid="create-result">{createResult}</p>
 
@@ -75,7 +78,7 @@ describe("CitiesContext with localStorage", () => {
     localStorage.clear();
   });
 
-  it("loads cities from localStorage on mount", async () => {
+  it("loadCities_savedJournal_restoresTrips", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
 
     render(
@@ -91,7 +94,7 @@ describe("CitiesContext with localStorage", () => {
     });
   });
 
-  it("sets an error when localStorage contains invalid JSON", async () => {
+  it("loadCities_invalidJson_reportsError", async () => {
     localStorage.setItem(STORAGE_KEY, "{invalid-json");
 
     render(
@@ -102,12 +105,12 @@ describe("CitiesContext with localStorage", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("error")).toHaveTextContent(
-        "There was an error loading the cities...",
+        "Your saved journal could not be read.",
       );
     });
   });
 
-  it("loads city details by id", async () => {
+  it("getCity_existingId_selectsTrip", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
 
     render(
@@ -125,11 +128,13 @@ describe("CitiesContext with localStorage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
+      expect(screen.getByTestId("current-city")).toHaveTextContent(
+        "city-sofia",
+      );
     });
   });
 
-  it("sets an error when loading a missing city", async () => {
+  it("getCity_missingId_reportsError", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
 
     render(
@@ -148,12 +153,12 @@ describe("CitiesContext with localStorage", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("error")).toHaveTextContent(
-        "There was an error loading the city...",
+        "This trip is no longer in your journal.",
       );
     });
   });
 
-  it("creates a city, persists it, and returns success", async () => {
+  it("createCity_validTrip_savesAndSelectsTrip", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([storedCities[0]]));
     vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue("city-3");
 
@@ -182,7 +187,7 @@ describe("CitiesContext with localStorage", () => {
     ]);
   });
 
-  it("returns failure and sets an error if city creation cannot be saved", async () => {
+  it("createCity_storageDenied_reportsFailure", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new Error("Storage write denied");
@@ -206,11 +211,11 @@ describe("CitiesContext with localStorage", () => {
       expect(screen.getByTestId("create-result")).toHaveTextContent("false");
     });
     expect(screen.getByTestId("error")).toHaveTextContent(
-      "There was an error creating the city...",
+      "Your trip could not be saved.",
     );
   });
 
-  it("deletes a city and clears current city when deleting the selected city", async () => {
+  it("deleteCity_selectedTrip_clearsSelectionAndStorage", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
 
     render(
@@ -227,7 +232,9 @@ describe("CitiesContext with localStorage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
+      expect(screen.getByTestId("current-city")).toHaveTextContent(
+        "city-sofia",
+      );
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Delete Sofia" }));
@@ -239,7 +246,7 @@ describe("CitiesContext with localStorage", () => {
     expect(readStoredCities().map((city) => city.id)).toEqual(["city-berlin"]);
   });
 
-  it("keeps current city when deleting a different city", async () => {
+  it("deleteCity_otherTrip_keepsSelection", async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedCities));
 
     render(
@@ -256,7 +263,9 @@ describe("CitiesContext with localStorage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Load Sofia" }));
     await waitFor(() => {
-      expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
+      expect(screen.getByTestId("current-city")).toHaveTextContent(
+        "city-sofia",
+      );
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Delete Berlin" }));
@@ -265,5 +274,29 @@ describe("CitiesContext with localStorage", () => {
       expect(screen.getByTestId("cities")).toHaveTextContent("city-sofia");
     });
     expect(screen.getByTestId("current-city")).toHaveTextContent("city-sofia");
+  });
+
+  it("loadCities_invalidRecord_preservesOriginalStorageAndBlocksWrites", async () => {
+    const original = JSON.stringify([
+      { ...storedCities[0], position: { lat: 120, lng: 0 } },
+    ]);
+    localStorage.setItem(STORAGE_KEY, original);
+
+    render(
+      <CitiesProvider>
+        <CitiesHarness />
+      </CitiesProvider>,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("error")).not.toHaveTextContent("none"),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Create city" }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("create-result")).toHaveTextContent("false"),
+    );
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(original);
+    expect(screen.getByTestId("cities")).toHaveTextContent("none");
   });
 });

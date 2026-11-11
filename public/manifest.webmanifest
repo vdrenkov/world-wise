@@ -3,8 +3,8 @@
   "short_name": "WorldWise",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#242a2e",
-  "theme_color": "#00c46a",
+  "background_color": "#123d3c",
+  "theme_color": "#123d3c",
   "icons": [
     {
       "src": "icon-192.png",

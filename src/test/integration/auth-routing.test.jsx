@@ -28,7 +28,7 @@ function renderAuthRoutingApp(initialEntries) {
 }
 
 describe("auth and routing integration", () => {
-  it("redirects unauthenticated users away from protected routes", async () => {
+  it("openProtectedRoute_anonymousSession_redirectsHome", async () => {
     renderAuthRoutingApp(["/app"]);
 
     await waitFor(() => {
@@ -37,7 +37,7 @@ describe("auth and routing integration", () => {
     expect(screen.queryByText("Private app")).not.toBeInTheDocument();
   });
 
-  it("logs in and navigates to protected content", async () => {
+  it("login_demoCredentials_opensJournal", async () => {
     renderAuthRoutingApp(["/login"]);
 
     fireEvent.click(screen.getByRole("button", { name: "Login" }));

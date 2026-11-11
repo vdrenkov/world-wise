@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAuth } from "../../../contexts/FakeAuthContext";
@@ -37,20 +38,28 @@ describe("Login", () => {
     mockedUseAuth.mockReset();
   });
 
-  it("submits with default credentials", () => {
+  it("submitLogin_demoCredentials_callsLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
 
     expect(login).toHaveBeenCalledWith("vdrenkov@example.com", "qwerty");
   });
 
-  it("does not call login when email is empty", () => {
+  it("submitLogin_emptyEmail_doesNotCallLogin", () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: false });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     fireEvent.change(screen.getByLabelText("Email address"), {
       target: { value: "" },
@@ -60,10 +69,14 @@ describe("Login", () => {
     expect(login).not.toHaveBeenCalled();
   });
 
-  it("redirects authenticated users to app layout", async () => {
+  it("renderLogin_demoSession_redirectsToJournal", async () => {
     mockedUseAuth.mockReturnValue({ login, isAuthenticated: true });
 
-    render(<Login />);
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => {
       expect(mockedNavigate).toHaveBeenCalledWith("/app", { replace: true });

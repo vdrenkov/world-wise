@@ -14,7 +14,7 @@ vi.mock("react-router", async () => {
 });
 
 describe("BackButton", () => {
-  it("navigates one step back when clicked", () => {
+  it("clickBackButton_previousPage_navigatesBack", () => {
     render(<BackButton />);
 
     fireEvent.click(screen.getByRole("button", { name: /back/i }));

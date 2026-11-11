@@ -27,7 +27,7 @@ describe("CityList", () => {
     mockedUseCities.mockReset();
   });
 
-  it("shows a loading state while cities are loading", () => {
+  it("renderCityList_loadingJournal_showsSpinner", () => {
     mockedUseCities.mockReturnValue({ cities: [], isLoading: true });
 
     render(<CityList />);
@@ -35,7 +35,7 @@ describe("CityList", () => {
     expect(screen.getByText("Loading cities...")).toBeInTheDocument();
   });
 
-  it("shows an empty-state message when there are no cities", () => {
+  it("renderCityList_emptyJournal_showsFirstTripGuidance", () => {
     mockedUseCities.mockReturnValue({ cities: [], isLoading: false });
 
     render(<CityList />);
@@ -45,7 +45,7 @@ describe("CityList", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders city items when cities are available", () => {
+  it("renderCityList_savedTrips_showsCities", () => {
     mockedUseCities.mockReturnValue({
       cities: [
         { id: 1, cityName: "Sofia" },

@@ -27,7 +27,7 @@ describe("CountryList", () => {
     mockedUseCities.mockReset();
   });
 
-  it("shows loading state while cities are loading", () => {
+  it("renderCountryList_loadingJournal_showsSpinner", () => {
     mockedUseCities.mockReturnValue({ cities: [], isLoading: true });
 
     render(<CountryList />);
@@ -35,7 +35,7 @@ describe("CountryList", () => {
     expect(screen.getByText("Loading countries...")).toBeInTheDocument();
   });
 
-  it("shows empty-state message when there are no cities", () => {
+  it("renderCountryList_emptyJournal_showsFirstTripGuidance", () => {
     mockedUseCities.mockReturnValue({ cities: [], isLoading: false });
 
     render(<CountryList />);
@@ -45,7 +45,7 @@ describe("CountryList", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders only unique countries derived from cities", () => {
+  it("renderCountryList_repeatedCountry_showsUniqueCountries", () => {
     mockedUseCities.mockReturnValue({
       isLoading: false,
       cities: [

@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { convertToEmoji } from "../../../components/Form";
+import { convertToEmoji } from "../../../types";
 
 describe("Form utilities", () => {
-  it("converts an uppercase country code to a flag emoji", () => {
+  it("convertToEmoji_uppercaseCode_returnsFlag", () => {
     expect(convertToEmoji("BG")).toBe("🇧🇬");
   });
 
-  it("converts a lowercase country code to a flag emoji", () => {
+  it("convertToEmoji_lowercaseCode_returnsFlag", () => {
     expect(convertToEmoji("de")).toBe("🇩🇪");
   });
 });

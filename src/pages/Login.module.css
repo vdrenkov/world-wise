@@ -1,24 +1,54 @@
-.login {
-  margin: 2.5rem;
-  padding: 2.5rem 5rem;
-  background-color: var(--color-dark--1);
-  min-height: calc(100vh - 5rem);
+.panel {
+  max-width: 1050px;
+  margin: 5rem auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 10%;
+  align-items: center;
 }
-
+.panel h1 {
+  font-size: clamp(3rem, 4vw, 4.5rem);
+  margin: 1.2rem 0 2rem;
+}
+.panel p {
+  color: var(--muted);
+}
+.disclosure {
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+}
 .form {
-  background-color: var(--color-dark--2);
-  border-radius: 7px;
-  padding: 2rem 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  width: 48rem;
-  margin: 8rem auto;
+  --muted: #43635e;
+  --focus: #a5441f;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--accent);
+  padding: 2rem;
+  border-radius: 6px;
+  display: grid;
+  gap: 1.2rem;
+  box-shadow: 0 16px 40px #08242340;
 }
-
-.row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.form h2 {
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+.credentials {
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .panel {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin: 2rem auto;
+  }
+  .form {
+    padding: 1.4rem;
+  }
 }

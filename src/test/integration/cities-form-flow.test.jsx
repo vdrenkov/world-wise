@@ -21,55 +21,36 @@ function renderCitiesFlowApp(initialEntries) {
   );
 }
 
-describe("cities form flow integration", () => {
-  let fetchMock;
-
-  beforeEach(() => {
-    localStorage.clear();
-    fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
-  });
-
+describe("Trip persistence", () => {
+  beforeEach(() => localStorage.clear());
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.unstubAllGlobals();
     localStorage.clear();
   });
 
-  it("creates a city from form data and persists it after remount", async () => {
+  it("createCity_manualForm_persistsTripAfterRemount", async () => {
     vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue("city-new");
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue({
-        city: "Sofia",
-        countryName: "Bulgaria",
-        countryCode: "BG",
-      }),
+    const { unmount } = renderCitiesFlowApp([
+      "/app/form?lat=42.6977&lng=23.3219",
+    ]);
+    fireEvent.change(screen.getByLabelText("City name"), {
+      target: { value: "Sofia" },
     });
-
-    const { unmount } = renderCitiesFlowApp(["/app/form?lat=42.6977&lng=23.3219"]);
-
-    await waitFor(() => {
-      expect(screen.getByLabelText("City name")).toHaveValue("Sofia");
+    fireEvent.change(screen.getByLabelText("Country"), {
+      target: { value: "Bulgaria" },
     });
+    fireEvent.click(screen.getByRole("button", { name: "Add", exact: true }));
 
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
-
-    await waitFor(() => {
-      expect(screen.getByText("Sofia")).toBeInTheDocument();
-    });
-
-    const storedCities = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    await screen.findByText("Sofia");
+    const storedCities = JSON.parse(localStorage.getItem(STORAGE_KEY));
     expect(storedCities).toHaveLength(1);
-    expect(storedCities[0].id).toBe("city-new");
-    expect(storedCities[0].cityName).toBe("Sofia");
-
-    unmount();
-
-    renderCitiesFlowApp(["/app/cities"]);
-
-    await waitFor(() => {
-      expect(screen.getByText("Sofia")).toBeInTheDocument();
+    expect(storedCities[0]).toMatchObject({
+      id: "city-new",
+      cityName: "Sofia",
+      position: { lat: 42.6977, lng: 23.3219 },
     });
+    unmount();
+    renderCitiesFlowApp(["/app/cities"]);
+    await waitFor(() => expect(screen.getByText("Sofia")).toBeInTheDocument());
   });
 });

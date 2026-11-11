@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 describe("useGeolocation", () => {
-  it("initializes with the provided default position", () => {
+  it("useGeolocation_defaultPosition_initializesPosition", () => {
     const { result } = renderHook(() => useGeolocation({ lat: 12, lng: 34 }));
 
     expect(result.current.position).toEqual({ lat: 12, lng: 34 });
@@ -25,7 +25,7 @@ describe("useGeolocation", () => {
     expect(result.current.error).toBeNull();
   });
 
-  it("sets an error when geolocation is not supported", () => {
+  it("useGeolocation_unsupportedBrowser_reportsError", () => {
     setGeolocation(undefined);
 
     const { result } = renderHook(() => useGeolocation());
@@ -34,11 +34,13 @@ describe("useGeolocation", () => {
       result.current.getPosition();
     });
 
-    expect(result.current.error).toBe("Your browser does not support geolocation.");
+    expect(result.current.error).toBe(
+      "Your browser does not support geolocation.",
+    );
     expect(result.current.isLoading).toBe(false);
   });
 
-  it("stores coordinates when geolocation succeeds", () => {
+  it("getPosition_browserReturnsCoordinates_storesPosition", async () => {
     const getCurrentPosition = vi.fn((success) => {
       success({ coords: { latitude: 42.6977, longitude: 23.3219 } });
     });
@@ -46,8 +48,8 @@ describe("useGeolocation", () => {
 
     const { result } = renderHook(() => useGeolocation());
 
-    act(() => {
-      result.current.getPosition();
+    await act(async () => {
+      await result.current.getPosition();
     });
 
     expect(getCurrentPosition).toHaveBeenCalledOnce();
@@ -56,7 +58,7 @@ describe("useGeolocation", () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it("stores a browser geolocation error when lookup fails", () => {
+  it("getPosition_browserDeniesLocation_storesError", async () => {
     const getCurrentPosition = vi.fn((_, error) => {
       error({ message: "User denied Geolocation" });
     });
@@ -64,8 +66,8 @@ describe("useGeolocation", () => {
 
     const { result } = renderHook(() => useGeolocation());
 
-    act(() => {
-      result.current.getPosition();
+    await act(async () => {
+      await result.current.getPosition();
     });
 
     expect(getCurrentPosition).toHaveBeenCalledOnce();

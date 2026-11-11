@@ -49,7 +49,7 @@ describe("cities delete flow integration", () => {
     localStorage.clear();
   });
 
-  it("deletes a city from UI and updates localStorage", async () => {
+  it("deleteCity_savedTrip_updatesListAndStorage", async () => {
     renderCityListApp(["/app/cities"]);
 
     await waitFor(() => {

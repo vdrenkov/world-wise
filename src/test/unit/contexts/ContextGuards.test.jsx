@@ -5,13 +5,13 @@ import { useCities } from "../../../contexts/CitiesContext";
 import { useAuth } from "../../../contexts/FakeAuthContext";
 
 describe("context hook guards", () => {
-  it("throws when useCities is used outside CitiesProvider", () => {
+  it("useCities_missingProvider_throwsHelpfulError", () => {
     expect(() => renderHook(() => useCities())).toThrow(
       "CitiesContext was used outside the CitiesProvider.",
     );
   });
 
-  it("throws when useAuth is used outside AuthProvider", () => {
+  it("useAuth_missingProvider_throwsHelpfulError", () => {
     expect(() => renderHook(() => useAuth())).toThrow(
       "AuthContext was used outside AuthProvider.",
     );
