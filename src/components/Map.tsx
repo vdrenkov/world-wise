@@ -45,10 +45,6 @@ export default function WorldMap() {
   const center: LatLngTuple =
     latitude !== null && longitude !== null ? [latitude, longitude] : [35, 15];
 
-  async function handleLocate() {
-    await getPosition();
-  }
-
   return (
     <section className={styles.mapContainer} aria-label="Travel map">
       <div className={styles.toolbar}>
@@ -56,7 +52,7 @@ export default function WorldMap() {
           <strong>Your world, mapped.</strong>
           <small>Click anywhere to start a memory.</small>
         </span>
-        <Button type="secondary" onClick={handleLocate} disabled={isLoading}>
+        <Button type="secondary" onClick={getPosition} disabled={isLoading}>
           {isLoading ? "Locating…" : "Use your position"}
         </Button>
       </div>

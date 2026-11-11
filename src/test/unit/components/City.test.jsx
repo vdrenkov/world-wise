@@ -16,10 +16,6 @@ vi.mock("../../../contexts/CitiesContext", () => ({
   useCities: vi.fn(),
 }));
 
-vi.mock("../../../components/Spinner", () => ({
-  default: () => <p>Loading city...</p>,
-}));
-
 vi.mock("../../../components/BackButton", () => ({
   default: () => <button>Back</button>,
 }));
@@ -38,7 +34,6 @@ describe("City", () => {
   it("renderCity_routeId_loadsTrip", () => {
     mockedUseCities.mockReturnValue({
       getCity,
-      isLoading: false,
       currentCity: {
         cityName: "Lisbon",
         emoji: "🇵🇹",
@@ -52,22 +47,25 @@ describe("City", () => {
     expect(getCity).toHaveBeenCalledWith("7");
   });
 
-  it("renderCity_loadingTrip_showsSpinner", () => {
+  it("renderCity_missingTrip_showsRecoveryWithoutDetails", () => {
     mockedUseCities.mockReturnValue({
       getCity,
-      isLoading: true,
-      currentCity: {},
     });
 
     render(<City />);
 
-    expect(screen.getByText("Loading city...")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Trip not found" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Back" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /Wikipedia/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("renderCity_savedTrip_showsNotesAndWikipediaLink", () => {
     mockedUseCities.mockReturnValue({
       getCity,
-      isLoading: false,
       currentCity: {
         cityName: "Lisbon",
         emoji: "🇵🇹",
@@ -90,7 +88,6 @@ describe("City", () => {
   it("renderCity_emptyNotes_omitsNotesSection", () => {
     mockedUseCities.mockReturnValue({
       getCity,
-      isLoading: false,
       currentCity: {
         cityName: "Lisbon",
         emoji: "🇵🇹",

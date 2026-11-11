@@ -32,7 +32,7 @@ function TripForm({ position }: { position?: Position }) {
   const suggestion = newCitySchema
     .pick({ cityName: true, country: true, emoji: true })
     .safeParse(location.state);
-  const { createCity, isLoading } = useCities();
+  const { createCity } = useCities();
   const [cityName, setCityName] = useState(
     suggestion.success ? suggestion.data.cityName : "",
   );
@@ -140,14 +140,14 @@ function TripForm({ position }: { position?: Position }) {
     }
 
     setError("");
-    const created = await createCity(result.data);
+    const created = createCity(result.data);
 
     if (created) {
       await navigate("/app/cities");
     }
   }
 
-  const busy = isLoading || isNaming || isLocating;
+  const busy = isNaming || isLocating;
 
   return (
     <section className={styles.section}>
@@ -264,7 +264,7 @@ function TripForm({ position }: { position?: Position }) {
         </div>
         <div className={styles.buttons}>
           <Button type="primary" htmlType="submit" disabled={busy}>
-            {isLoading ? "Saving…" : "Add"}
+            Add
           </Button>
           <Link tabIndex={0} to="/app/cities">
             Cancel

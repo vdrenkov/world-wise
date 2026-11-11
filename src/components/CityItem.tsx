@@ -10,10 +10,6 @@ function CityItem({ city }: { city: City }) {
   const { currentCity, deleteCity } = useCities();
   const { cityName, emoji, date, id, position } = city;
 
-  async function handleDelete() {
-    await deleteCity(id);
-  }
-
   return (
     <li className={styles.cityRow}>
       <Link
@@ -32,7 +28,7 @@ function CityItem({ city }: { city: City }) {
       <button
         type="button"
         className={styles.deleteBtn}
-        onClick={handleDelete}
+        onClick={() => deleteCity(id)}
         aria-label={`Delete ${cityName}`}
       >
         &times;

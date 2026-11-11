@@ -25,10 +25,9 @@ interface CitiesValue {
   currentCity?: City;
   error: string;
   unreadable: boolean;
-  isLoading: boolean;
-  createCity: (city: NewCity) => Promise<boolean>;
+  createCity: (city: NewCity) => boolean;
   getCity: (id: string) => void;
-  deleteCity: (id: string) => Promise<boolean>;
+  deleteCity: (id: string) => boolean;
   reloadCities: () => void;
   resetCities: () => void;
 }
@@ -48,7 +47,7 @@ function loadState(): CitiesState {
 function CitiesProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState(loadState);
 
-  const createCity = useCallback(async (newCity: NewCity) => {
+  const createCity = useCallback((newCity: NewCity) => {
     try {
       const city = { ...newCitySchema.parse(newCity), id: crypto.randomUUID() };
       const cities = [...readCities(), city];
@@ -71,18 +70,18 @@ function CitiesProvider({ children }: { children: ReactNode }) {
         return previous;
       }
 
-      const found = previous.cities.some((city) => city.id === String(id));
+      const found = previous.cities.some((city) => city.id === id);
       return {
         ...previous,
-        selectedId: String(id),
+        selectedId: id,
         error: found ? "" : "This trip is no longer in your journal.",
       };
     });
   }, []);
 
-  const deleteCity = useCallback(async (id: string) => {
+  const deleteCity = useCallback((id: string) => {
     try {
-      const cities = readCities().filter((city) => city.id !== String(id));
+      const cities = readCities().filter((city) => city.id !== id);
       saveCities(cities);
       setState((previous) => ({
         ...previous,
@@ -137,7 +136,6 @@ function CitiesProvider({ children }: { children: ReactNode }) {
     () => ({
       ...state,
       currentCity: state.cities.find((city) => city.id === state.selectedId),
-      isLoading: false,
       createCity,
       getCity,
       deleteCity,

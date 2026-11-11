@@ -16,10 +16,6 @@ vi.mock("../../../components/Message", () => ({
   default: ({ message }) => <p>{message}</p>,
 }));
 
-vi.mock("../../../components/Spinner", () => ({
-  default: () => <p>Loading cities...</p>,
-}));
-
 const mockedUseCities = vi.mocked(useCities);
 
 describe("CityList", () => {
@@ -27,16 +23,8 @@ describe("CityList", () => {
     mockedUseCities.mockReset();
   });
 
-  it("renderCityList_loadingJournal_showsSpinner", () => {
-    mockedUseCities.mockReturnValue({ cities: [], isLoading: true });
-
-    render(<CityList />);
-
-    expect(screen.getByText("Loading cities...")).toBeInTheDocument();
-  });
-
   it("renderCityList_emptyJournal_showsFirstTripGuidance", () => {
-    mockedUseCities.mockReturnValue({ cities: [], isLoading: false });
+    mockedUseCities.mockReturnValue({ cities: [] });
 
     render(<CityList />);
 
@@ -51,7 +39,6 @@ describe("CityList", () => {
         { id: 1, cityName: "Sofia" },
         { id: 2, cityName: "Berlin" },
       ],
-      isLoading: false,
     });
 
     render(<CityList />);

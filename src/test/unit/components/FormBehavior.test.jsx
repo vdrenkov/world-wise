@@ -10,12 +10,12 @@ const createCity = vi.fn();
 
 beforeEach(() => {
   createCity.mockReset();
-  vi.mocked(useCities).mockReturnValue({ createCity, isLoading: false });
+  vi.mocked(useCities).mockReturnValue({ createCity });
 });
 
 describe("Trip form", () => {
   it("submitTrip_validManualEntry_passesTypedDataWithoutGeocoding", async () => {
-    createCity.mockResolvedValue(false);
+    createCity.mockReturnValue(false);
     render(
       <MemoryRouter initialEntries={["/app/form?lat=0&lng=0"]}>
         <Form />

@@ -45,8 +45,8 @@ function CitiesHarness() {
     useCities();
   const [createResult, setCreateResult] = useState("none");
 
-  async function handleCreate() {
-    const result = await createCity(cityToCreate);
+  function handleCreate() {
+    const result = createCity(cityToCreate);
     setCreateResult(String(result));
   }
 

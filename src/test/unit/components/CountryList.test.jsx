@@ -16,10 +16,6 @@ vi.mock("../../../components/Message", () => ({
   default: ({ message }) => <p>{message}</p>,
 }));
 
-vi.mock("../../../components/Spinner", () => ({
-  default: () => <p>Loading countries...</p>,
-}));
-
 const mockedUseCities = vi.mocked(useCities);
 
 describe("CountryList", () => {
@@ -27,16 +23,8 @@ describe("CountryList", () => {
     mockedUseCities.mockReset();
   });
 
-  it("renderCountryList_loadingJournal_showsSpinner", () => {
-    mockedUseCities.mockReturnValue({ cities: [], isLoading: true });
-
-    render(<CountryList />);
-
-    expect(screen.getByText("Loading countries...")).toBeInTheDocument();
-  });
-
   it("renderCountryList_emptyJournal_showsFirstTripGuidance", () => {
-    mockedUseCities.mockReturnValue({ cities: [], isLoading: false });
+    mockedUseCities.mockReturnValue({ cities: [] });
 
     render(<CountryList />);
 
@@ -47,7 +35,6 @@ describe("CountryList", () => {
 
   it("renderCountryList_repeatedCountry_showsUniqueCountries", () => {
     mockedUseCities.mockReturnValue({
-      isLoading: false,
       cities: [
         { id: 1, country: "Bulgaria", emoji: "🇧🇬" },
         { id: 2, country: "Germany", emoji: "🇩🇪" },

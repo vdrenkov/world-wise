@@ -5,11 +5,10 @@ import { useCities } from "../contexts/CitiesContext";
 import { formatDate } from "../types";
 import BackButton from "./BackButton";
 import styles from "./City.module.css";
-import Spinner from "./Spinner";
 
 function City() {
   const { id } = useParams();
-  const { getCity, currentCity, isLoading } = useCities();
+  const { getCity, currentCity } = useCities();
 
   useEffect(
     function () {
@@ -17,8 +16,6 @@ function City() {
     },
     [id, getCity],
   );
-
-  if (isLoading) return <Spinner />;
 
   if (!currentCity) {
     return (
