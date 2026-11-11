@@ -5,6 +5,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { Map as LeafletMap } from "leaflet";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import App from "../../App";
@@ -40,6 +41,7 @@ async function enterJournal(cities = []) {
 describe("Complete journal", () => {
   it("synchronizeJournal_otherTabAddsTrip_keepsOpenTripVisible", async () => {
     await enterJournal([sofia]);
+    expect(document.querySelectorAll(".leaflet-marker-icon")).toHaveLength(1);
     fireEvent.click(await screen.findByRole("link", { name: /Sofia/ }));
     await screen.findByText(sofia.notes);
     localStorage.setItem(STORAGE_KEY, JSON.stringify([sofia, berlin]));
@@ -53,6 +55,7 @@ describe("Complete journal", () => {
     );
 
     expect(screen.getByText(sofia.notes)).toBeInTheDocument();
+    expect(document.querySelectorAll(".leaflet-marker-icon")).toHaveLength(2);
     expect(
       screen.queryByRole("heading", { name: "Trip not found" }),
     ).not.toBeInTheDocument();
@@ -238,5 +241,109 @@ describe("Complete journal", () => {
     expect(
       await screen.findByRole("heading", { name: "Free to explore." }),
     ).toBeInTheDocument();
+  });
+
+  it("recenterMap_draftTrip_preservesInputAndSelectedCoordinates", async () => {
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: {
+        getCurrentPosition: (success) =>
+          success({ coords: { latitude: 42.6977, longitude: 23.3219 } }),
+      },
+    });
+    const setView = vi.spyOn(LeafletMap.prototype, "setView");
+    await enterJournal([sofia]);
+    fireEvent.click(screen.getByRole("link", { name: "+ Add a place" }));
+    fireEvent.change(await screen.findByLabelText("Latitude"), {
+      target: { value: "52.52" },
+    });
+    fireEvent.change(screen.getByLabelText("Longitude"), {
+      target: { value: "13.405" },
+    });
+    fireEvent.change(screen.getByLabelText("City name"), {
+      target: { value: "Berlin" },
+    });
+    fireEvent.change(screen.getByLabelText("Country"), {
+      target: { value: "Germany" },
+    });
+    fireEvent.change(screen.getByLabelText(/Trip notes/), {
+      target: { value: "Keep this memory." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Use your position" }));
+
+    await waitFor(() =>
+      expect(setView).toHaveBeenLastCalledWith([42.6977, 23.3219]),
+    );
+    expect(screen.getByLabelText("Latitude")).toHaveValue(52.52);
+    expect(screen.getByLabelText("Longitude")).toHaveValue(13.405);
+    expect(screen.getByLabelText("City name")).toHaveValue("Berlin");
+    expect(screen.getByLabelText(/Trip notes/)).toHaveValue(
+      "Keep this memory.",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Add", exact: true }));
+
+    await screen.findByRole("link", { name: /Berlin/ });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY))[1]).toMatchObject({
+      position: { lat: 52.52, lng: 13.405 },
+      notes: "Keep this memory.",
+    });
+  });
+
+  it("selectMapPoint_mapClick_opensManualEntryWithoutGeocoding", async () => {
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+    await enterJournal();
+    fireEvent.click(document.querySelector(".leaflet-container"), {
+      clientX: 100,
+      clientY: 100,
+    });
+
+    await screen.findByRole("heading", { name: "Add a place" });
+    expect(screen.getByLabelText("City name")).toHaveValue("");
+    expect(screen.getByLabelText("Country")).toHaveValue("");
+    expect(screen.queryByLabelText("Latitude")).not.toBeInTheDocument();
+    const parameters = new URLSearchParams(window.location.search);
+    const position = {
+      lat: Number(parameters.get("lat")),
+      lng: Number(parameters.get("lng")),
+    };
+    expect(parameters.has("lat")).toBe(true);
+    expect(parameters.has("lng")).toBe(true);
+    expect(position.lat).toBeGreaterThanOrEqual(-90);
+    expect(position.lat).toBeLessThanOrEqual(90);
+    expect(position.lng).toBeGreaterThanOrEqual(-180);
+    expect(position.lng).toBeLessThanOrEqual(180);
+    fireEvent.change(screen.getByLabelText("City name"), {
+      target: { value: "Map memory" },
+    });
+    fireEvent.change(screen.getByLabelText("Country"), {
+      target: { value: "My travels" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add", exact: true }));
+
+    await screen.findByRole("link", { name: /Map memory/ });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY))[0].position).toEqual(
+      position,
+    );
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("loadMap_tilesFail_keepsCoordinateEntryAvailableAndRecovers", async () => {
+    await enterJournal();
+    const tile = document.querySelector(".leaflet-tile");
+    expect(tile).not.toBeNull();
+    fireEvent.error(tile);
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Map tiles are unavailable",
+    );
+    const manualEntry = screen.getByRole("link", {
+      name: "Add a place using coordinates.",
+    });
+    expect(manualEntry).toHaveAttribute("href", "/app/form");
+    fireEvent.click(manualEntry);
+    expect(await screen.findByLabelText("Latitude")).toBeInTheDocument();
+    fireEvent.load(tile);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });
